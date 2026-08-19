@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">Editable legal-process flow template</title>
+  <desc id="desc">A reusable two-lane legal flowchart template with editable text and parenthetical authorities.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L12 6 L0 12 Z" fill="#55606D"/>
+    </marker>
+    <style>
+      .page{fill:#F7F6F2}.title{font:500 30px 'Noto Sans SC','PingFang SC',sans-serif;fill:#1F2933}.subtitle{font:400 15px 'Noto Sans SC','PingFang SC',sans-serif;fill:#52606D}.heading{font:500 18px 'Noto Sans SC','PingFang SC',sans-serif;fill:#1F2933}.body{font:400 15px 'Noto Sans SC','PingFang SC',sans-serif;fill:#263238}.source{font:500 13px 'IBM Plex Mono','SFMono-Regular',monospace;fill:#3E4C59}.lane{fill:none;stroke:#C5CBD1;stroke-width:1}.stage{fill:#E7EEF6;stroke:#6783A2;stroke-width:1.5}.review{fill:#EEE9F5;stroke:#86729F;stroke-width:1.5}.terminal{fill:#F4ECDC;stroke:#A48755;stroke-width:1.5}.connector{fill:none;stroke:#55606D;stroke-width:2;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect class="page" width="1200" height="900"/>
+  <text class="title" x="600" y="52" text-anchor="middle">法律程序标题</text>
+  <text class="subtitle" x="600" y="82" text-anchor="middle">司法辖区／程序版本／生效日期</text>
+
+  <rect class="lane" x="70" y="125" width="500" height="650" rx="8"/>
+  <rect class="lane" x="630" y="125" width="500" height="650" rx="8"/>
+  <text class="heading" x="320" y="165" text-anchor="middle">第一审／主要程序</text>
+  <text class="heading" x="880" y="165" text-anchor="middle">复审／上诉程序</text>
+
+  <path class="connector" d="M320 320 V385"/>
+  <path class="connector" d="M520 480 H680"/>
+  <path class="connector" d="M880 555 V620"/>
+
+  <g id="main-step-1">
+    <rect class="stage" x="120" y="205" width="400" height="115" rx="7"/>
+    <text class="heading" x="320" y="237" text-anchor="middle">1　程序步骤</text>
+    <text class="body" x="320" y="269" text-anchor="middle">行为人＋行为｜触发后 X 个工作日内</text>
+    <text class="source" x="320" y="301" text-anchor="middle">（依据：Rule X(a)）</text>
+  </g>
+
+  <g id="main-step-2">
+    <rect class="stage" x="120" y="385" width="400" height="190" rx="7"/>
+    <text class="heading" x="320" y="417" text-anchor="middle">2　决定或分支</text>
+    <text class="body" x="320" y="449" text-anchor="middle">写明条件、裁量主体和程序后果</text>
+    <text class="body" x="320" y="481" text-anchor="middle">没有固定期限时直接写明规则未规定</text>
+    <text class="source" x="320" y="543" text-anchor="middle">（依据：Rule Y(b)）</text>
+  </g>
+
+  <g id="review-step-1">
+    <rect class="review" x="680" y="385" width="400" height="170" rx="7"/>
+    <text class="heading" x="880" y="417" text-anchor="middle">3　上诉／复审</text>
+    <text class="body" x="880" y="449" text-anchor="middle">区分当然上诉与许可上诉</text>
+    <text class="body" x="880" y="481" text-anchor="middle">注明记录、审查标准和新证据限制</text>
+    <text class="source" x="880" y="529" text-anchor="middle">（依据：Rule Z）</text>
+  </g>
+
+  <g id="terminal-step">
+    <rect class="terminal" x="680" y="620" width="400" height="115" rx="7"/>
+    <text class="heading" x="880" y="652" text-anchor="middle">4　终局／公布／执行</text>
+    <text class="body" x="880" y="684" text-anchor="middle">写明输出、送达、公开或执行后果</text>
+    <text class="source" x="880" y="716" text-anchor="middle">（依据：Rule Q）</text>
+  </g>
+
+  <text class="subtitle" x="75" y="850">来源：正式规则名称（版本／生效日期）</text>
+</svg>
