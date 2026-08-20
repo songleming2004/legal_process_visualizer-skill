@@ -32,8 +32,20 @@ Keep the source readable. One legal step should normally be one `<g id="...">` c
 - Keep vertical gaps sufficient for arrowheads and labels.
 - Attach arrows to node boundaries, not through node centers.
 - Put conditional labels near the first segment leaving a decision diamond.
-- Route optional or exceptional paths with dashed lines, but do not dash every connector.
+- Apply the line-semantics rules below; do not dash a connector merely because it is outside the main path.
 - Avoid connector crossings. If unavoidable, use lanes, bridge spacing, or split the diagram.
+
+## Line semantics
+
+Use line style to encode the nature of a relationship and color to encode the procedure category. Do not use either as decoration or overload one style with several meanings.
+
+- **Solid arrow:** ordinary procedural progression or any transition that changes the legal or procedural state.
+- **Dashed arrow:** conditional, exceptional, discretionary, optional, or procedure-conversion route. Label every non-obvious dashed arrow with the condition or route type.
+- **Dashed leader without an arrowhead:** association with an explanatory note, source note, citation, or `易错提示`. It does not indicate procedural direction.
+- **Dashed border:** scope, group, or module boundary. It does not indicate a legal relationship between enclosed nodes.
+- Return, remand, reconsideration, review, appeal, referral, and similar routes must use directional arrows whenever they change state, even when they are outside the main path.
+- Color encodes procedure category; line style encodes relationship nature. Do not swap, combine, or duplicate these meanings.
+- Include a line-style legend whenever more than one line style appears.
 
 ## Color
 

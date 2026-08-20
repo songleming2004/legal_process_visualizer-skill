@@ -6,7 +6,7 @@
       <path d="M0 0 L12 6 L0 12 Z" fill="#55606D"/>
     </marker>
     <style>
-      .page{fill:#F7F6F2}.title{font:500 30px 'Noto Sans SC','PingFang SC',sans-serif;fill:#1F2933}.subtitle{font:400 15px 'Noto Sans SC','PingFang SC',sans-serif;fill:#52606D}.heading{font:500 18px 'Noto Sans SC','PingFang SC',sans-serif;fill:#1F2933}.body{font:400 15px 'Noto Sans SC','PingFang SC',sans-serif;fill:#263238}.source{font:500 13px 'IBM Plex Mono','SFMono-Regular',monospace;fill:#3E4C59}.lane{fill:none;stroke:#C5CBD1;stroke-width:1}.stage{fill:#E7EEF6;stroke:#6783A2;stroke-width:1.5}.review{fill:#EEE9F5;stroke:#86729F;stroke-width:1.5}.terminal{fill:#F4ECDC;stroke:#A48755;stroke-width:1.5}.connector{fill:none;stroke:#55606D;stroke-width:2;marker-end:url(#arrow)}
+      .page{fill:#F7F6F2}.title{font:500 30px 'Noto Sans SC','PingFang SC',sans-serif;fill:#1F2933}.subtitle{font:400 15px 'Noto Sans SC','PingFang SC',sans-serif;fill:#52606D}.heading{font:500 18px 'Noto Sans SC','PingFang SC',sans-serif;fill:#1F2933}.body{font:400 15px 'Noto Sans SC','PingFang SC',sans-serif;fill:#263238}.source{font:500 13px 'IBM Plex Mono','SFMono-Regular',monospace;fill:#3E4C59}.lane{fill:none;stroke:#C5CBD1;stroke-width:1}.stage{fill:#E7EEF6;stroke:#6783A2;stroke-width:1.5}.review{fill:#EEE9F5;stroke:#86729F;stroke-width:1.5}.terminal{fill:#F4ECDC;stroke:#A48755;stroke-width:1.5}.connector{fill:none;stroke:#55606D;stroke-width:2;marker-end:url(#arrow)}.conditional{fill:none;stroke:#55606D;stroke-width:2;stroke-dasharray:8 7;marker-end:url(#arrow)}.leader{fill:none;stroke:#7A858F;stroke-width:1.5;stroke-dasharray:3 6}.moduleBoundary{fill:none;stroke:#AAB2BA;stroke-width:1.2;stroke-dasharray:6 6}
     </style>
   </defs>
   <rect class="page" width="1200" height="900"/>
@@ -52,5 +52,6 @@
     <text class="source" x="880" y="716" text-anchor="middle">（依据：Rule Q）</text>
   </g>
 
+  <text class="subtitle" x="75" y="820">线型：实线箭头＝程序状态变化｜虚线箭头＝条件／例外／转换｜无箭头虚线＝说明关联｜虚线框＝模块范围</text>
   <text class="subtitle" x="75" y="850">来源：正式规则名称（版本／生效日期）</text>
 </svg>
