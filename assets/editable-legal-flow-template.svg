@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="980" viewBox="0 0 1200 980" role="img" aria-labelledby="title desc">
   <title id="title">Editable legal-process flow template</title>
   <desc id="desc">A reusable two-lane legal flowchart template with editable text and parenthetical authorities.</desc>
   <defs>
@@ -6,24 +6,29 @@
       <path d="M0 0 L12 6 L0 12 Z" fill="#55606D"/>
     </marker>
     <style>
-      .page{fill:#F7F6F2}.title{font:500 30px 'Noto Sans SC','PingFang SC',sans-serif;fill:#1F2933}.subtitle{font:400 15px 'Noto Sans SC','PingFang SC',sans-serif;fill:#52606D}.heading{font:500 18px 'Noto Sans SC','PingFang SC',sans-serif;fill:#1F2933}.body{font:400 15px 'Noto Sans SC','PingFang SC',sans-serif;fill:#263238}.source{font:500 13px 'IBM Plex Mono','SFMono-Regular',monospace;fill:#3E4C59}.lane{fill:none;stroke:#C5CBD1;stroke-width:1}.stage{fill:#E7EEF6;stroke:#6783A2;stroke-width:1.5}.review{fill:#EEE9F5;stroke:#86729F;stroke-width:1.5}.terminal{fill:#F4ECDC;stroke:#A48755;stroke-width:1.5}.connector{fill:none;stroke:#55606D;stroke-width:2;marker-end:url(#arrow)}.conditional{fill:none;stroke:#55606D;stroke-width:2;stroke-dasharray:8 7;marker-end:url(#arrow)}.leader{fill:none;stroke:#7A858F;stroke-width:1.5;stroke-dasharray:3 6}.moduleBoundary{fill:none;stroke:#AAB2BA;stroke-width:1.2;stroke-dasharray:6 6}
+      .page{fill:#F7F6F2}.title{font:500 30px 'Noto Sans SC','PingFang SC',sans-serif;fill:#1F2933}.subtitle{font:400 15px 'Noto Sans SC','PingFang SC',sans-serif;fill:#52606D}.heading{font:500 18px 'Noto Sans SC','PingFang SC',sans-serif;fill:#1F2933}.body{font:400 15px 'Noto Sans SC','PingFang SC',sans-serif;fill:#263238}.source{font:500 13px 'IBM Plex Mono','SFMono-Regular',monospace;fill:#3E4C59}.edgeLabel{font:500 14px 'Noto Sans SC','PingFang SC',sans-serif;fill:#3E4C59}.lane{fill:none;stroke:#C5CBD1;stroke-width:1}.stage{fill:#E7EEF6;stroke:#6783A2;stroke-width:1.5}.decision{fill:#ECEFF1;stroke:#84909A;stroke-width:1.5}.review{fill:#EEE9F5;stroke:#86729F;stroke-width:1.5}.terminal{fill:#F4ECDC;stroke:#A48755;stroke-width:1.5}.connector{fill:none;stroke:#55606D;stroke-width:2;marker-end:url(#arrow)}.conditional{fill:none;stroke:#55606D;stroke-width:2;stroke-dasharray:8 7;marker-end:url(#arrow)}.leader{fill:none;stroke:#7A858F;stroke-width:1.5;stroke-dasharray:3 6}.moduleBoundary{fill:none;stroke:#AAB2BA;stroke-width:1.2;stroke-dasharray:6 6}
     </style>
   </defs>
   <rect class="page" width="1200" height="900"/>
   <text class="title" x="600" y="52" text-anchor="middle">法律程序标题</text>
   <text class="subtitle" x="600" y="82" text-anchor="middle">司法辖区／程序版本／生效日期</text>
 
-  <rect class="lane" x="70" y="125" width="500" height="650" rx="8"/>
-  <rect class="lane" x="630" y="125" width="500" height="650" rx="8"/>
+  <rect class="lane" x="70" y="125" width="500" height="720" rx="8"/>
+  <rect class="lane" x="630" y="125" width="500" height="720" rx="8"/>
   <text class="heading" x="320" y="165" text-anchor="middle">第一审／主要程序</text>
   <text class="heading" x="880" y="165" text-anchor="middle">复审／上诉程序</text>
 
-  <path id="edge-main-step-1-main-step-2" class="connector" d="M320 320 V385"
-        data-from="main-step-1" data-to="main-step-2" data-from-side="bottom" data-to-side="top"/>
-  <path id="edge-main-step-2-review-step-1" class="connector" d="M520 480 H680"
-        data-from="main-step-2" data-to="review-step-1" data-from-side="right" data-to-side="left"/>
-  <path id="edge-review-step-1-terminal-step" class="connector" d="M880 555 V620"
+  <path id="edge-main-step-1-permission-gateway" class="connector" d="M320 320 V380"
+        data-from="main-step-1" data-to="permission-gateway" data-from-side="bottom" data-to-side="top"/>
+  <path id="edge-permission-gateway-review-step-1" class="conditional" d="M500 470 H680"
+        data-from="permission-gateway" data-to="review-step-1" data-from-side="right" data-to-side="left" data-label="准许"/>
+  <path id="edge-permission-gateway-refusal-step" class="conditional" d="M320 560 V650"
+        data-from="permission-gateway" data-to="refusal-step" data-from-side="bottom" data-to-side="top" data-label="不准许"/>
+  <path id="edge-review-step-1-terminal-step" class="connector" d="M880 555 V650"
         data-from="review-step-1" data-to="terminal-step" data-from-side="bottom" data-to-side="top"/>
+
+  <text class="edgeLabel" x="540" y="458">准许</text>
+  <text class="edgeLabel" x="334" y="610">不准许</text>
 
   <g id="main-step-1">
     <rect class="stage" x="120" y="205" width="400" height="115" rx="7"/>
@@ -32,12 +37,10 @@
     <text class="source" x="320" y="301" text-anchor="middle">（依据：Rule X(a)）</text>
   </g>
 
-  <g id="main-step-2">
-    <rect class="stage" x="120" y="385" width="400" height="190" rx="7"/>
-    <text class="heading" x="320" y="417" text-anchor="middle">2　决定或分支</text>
-    <text class="body" x="320" y="449" text-anchor="middle">写明条件、裁量主体和程序后果</text>
-    <text class="body" x="320" y="481" text-anchor="middle">没有固定期限时直接写明规则未规定</text>
-    <text class="source" x="320" y="543" text-anchor="middle">（依据：Rule Y(b)）</text>
+  <g id="permission-gateway" data-node-shape="decision">
+    <polygon class="decision" points="320,380 500,470 320,560 140,470"/>
+    <text class="heading" x="320" y="454" text-anchor="middle">是否准许许可？</text>
+    <text class="source" x="320" y="486" text-anchor="middle">（依据：Rule Y(b)）</text>
   </g>
 
   <g id="review-step-1">
@@ -48,13 +51,21 @@
     <text class="source" x="880" y="529" text-anchor="middle">（依据：Rule Z）</text>
   </g>
 
-  <g id="terminal-step">
-    <rect class="terminal" x="680" y="620" width="400" height="115" rx="7"/>
-    <text class="heading" x="880" y="652" text-anchor="middle">4　终局／公布／执行</text>
-    <text class="body" x="880" y="684" text-anchor="middle">写明输出、送达、公开或执行后果</text>
-    <text class="source" x="880" y="716" text-anchor="middle">（依据：Rule Q）</text>
+  <g id="refusal-step">
+    <rect class="terminal" x="120" y="650" width="400" height="115" rx="7"/>
+    <text class="heading" x="320" y="682" text-anchor="middle">3A　许可不获准</text>
+    <text class="body" x="320" y="714" text-anchor="middle">写明拒绝、补正或其他程序后果</text>
+    <text class="source" x="320" y="746" text-anchor="middle">（依据：Rule Y(c)）</text>
   </g>
 
-  <text class="subtitle" x="75" y="820">线型：实线箭头＝程序状态变化｜虚线箭头＝条件／例外／转换｜无箭头虚线＝说明关联｜虚线框＝模块范围</text>
-  <text class="subtitle" x="75" y="850">来源：正式规则名称（版本／生效日期）</text>
+  <g id="terminal-step">
+    <rect class="terminal" x="680" y="650" width="400" height="115" rx="7"/>
+    <text class="heading" x="880" y="682" text-anchor="middle">4　终局／公布／执行</text>
+    <text class="body" x="880" y="714" text-anchor="middle">写明输出、送达、公开或执行后果</text>
+    <text class="source" x="880" y="746" text-anchor="middle">（依据：Rule Q）</text>
+  </g>
+
+  <text class="subtitle" x="75" y="890">形状：矩形＝行为／决定／状态｜菱形＝具有两项以上结果的判断网关</text>
+  <text class="subtitle" x="75" y="920">线型：实线箭头＝程序状态变化｜虚线箭头＝条件／例外／转换｜无箭头虚线＝说明关联｜虚线框＝模块范围</text>
+  <text class="subtitle" x="75" y="950">来源：正式规则名称（版本／生效日期）</text>
 </svg>

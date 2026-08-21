@@ -30,11 +30,14 @@ Keep the source readable. One legal step should normally be one `<g id="...">` c
 
 - Use consistent node widths within a lane.
 - Keep vertical gaps sufficient for arrowheads and labels.
+- Represent a validated decision diamond as an untransformed four-point `<polygon>` inside a `<g data-node-shape="decision">`. Its four vertices must be the top, right, bottom, and left midpoints of its bounding box. Do not simulate a diamond with a rotated rectangle or an arbitrary path when deterministic boundary validation is required.
+- Use a diamond only for a genuine question or route selection with at least two labeled outgoing outcomes. If the current toolchain cannot create, connect, render, and validate that geometry reliably, use a rectangular gateway card instead.
 - Attach arrows to node boundaries, not through node centers.
 - Give every arrowed connector a stable ID and declare `data-from`, `data-to`, `data-from-side`, and `data-to-side`. The declared node IDs must exist.
 - Calculate connector endpoints from node geometry. Do not type a coordinate merely because it looks close to a node.
 - Route the final segment from outside the target toward the declared side. A path that lands on the right boundary while still pointing right is invalid even though its endpoint touches the rectangle.
-- Put conditional labels near the first segment leaving a decision diamond.
+- Attach diamond connectors to the declared top, right, bottom, or left vertex. Put every outcome label near the first segment leaving the diamond and repeat the visible label in the connector's `data-label` metadata for deterministic checking.
+- Keep the diamond text to a compact question or test plus a short authority when space permits. Put explanations and consequences in destination cards or attached notes.
 - Apply the line-semantics rules below; do not dash a connector merely because it is outside the main path.
 - Avoid connector crossings. If unavoidable, use lanes, bridge spacing, or split the diagram.
 
