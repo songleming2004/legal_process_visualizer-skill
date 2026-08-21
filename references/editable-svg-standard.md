@@ -47,6 +47,7 @@ Use line style to encode the nature of a relationship and color to encode the pr
 - **Solid arrow:** ordinary procedural progression or any transition that changes the legal or procedural state.
 - **Dashed arrow:** conditional, exceptional, discretionary, optional, or procedure-conversion route. Label every non-obvious dashed arrow with the condition or route type.
 - **Dashed leader without an arrowhead:** association with an explanatory note, source note, citation, or `易错提示`. It does not indicate procedural direction.
+- **Solid route without an arrowhead:** permitted only as a source-specific inbound route to an explicit `routing-hub` in a validated single-arrow convergence. It must use class `converging`; the hub-to-target shared segment carries the sole arrowhead.
 - **Dashed border:** scope, group, or module boundary. It does not indicate a legal relationship between enclosed nodes.
 - Return, remand, reconsideration, review, appeal, referral, and similar routes must use directional arrows whenever they change state, even when they are outside the main path.
 - Color encodes procedure category; line style encodes relationship nature. Do not swap, combine, or duplicate these meanings.

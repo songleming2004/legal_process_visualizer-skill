@@ -66,6 +66,47 @@ For top or bottom sides, apply the same rule on the y-axis. Mixed-side curves mu
 
 Keep a consistent control-distance rule across parallel or sibling curves. Increase separation or introduce an explicit relationship hub when curves overlap, cross, or appear to merge. Geometry still carries no independent legal meaning: use solid or dashed style and an edge label to state the relationship.
 
+## Shared-segment risk and single-arrow convergence
+
+Treat a connector pair or family as needing explicit review when any of these signals appears:
+
+- two or more inbound routes leave their source nodes from the same side and head toward the same target or geometrically overlapping target region;
+- their first true turn points coincide or are separated by less than the diagram's visually distinguishable gap; use 24 px as a starting threshold when no other spacing system is defined;
+- the routes share an intermediate segment whose length is at least 32 px and more than approximately 35% of the shorter route.
+
+The first two signals are risk warnings: reroute, enlarge the spacing, or inspect an enlarged crop. The third is a hard failure when separate arrowed connectors visually collapse into one route.
+
+When the underlying relationships genuinely converge on the same target, use **single-arrow convergence**. Each source-specific route ends without an arrowhead at a visible routing hub; exactly one shared connector leaves the hub with the only arrowhead pointing to the target.
+
+```svg
+<path id="edge-source-a-hub" class="converging"
+      data-from="source-a" data-to="merge-hub"
+      data-from-side="right" data-to-side="top"
+      d="M350 195 H658 V352"/>
+<path id="edge-source-b-hub" class="converging"
+      data-from="source-b" data-to="merge-hub"
+      data-from-side="right" data-to-side="left"
+      d="M350 360 H650"/>
+<g id="merge-hub" class="routing-hub" data-routing-only="true">
+  <rect x="650" y="352" width="16" height="16" rx="8"/>
+</g>
+<path id="edge-hub-target" class="connector"
+      data-from="merge-hub" data-to="target"
+      data-from-side="right" data-to-side="left"
+      d="M666 360 H850" marker-end="url(#arrow)"/>
+```
+
+Requirements:
+
+- use class `converging` for every arrowless inbound route and class `routing-hub` on the hub group;
+- give the hub a small visible shape and `data-routing-only="true"` when it has no independent legal meaning;
+- keep source-specific relationship labels before the hub;
+- use at least two inbound routes and exactly one arrowed outbound route;
+- do not place multiple arrowheads on the shared segment or hide several complete connectors beneath one another;
+- do not use convergence merely to save space when the source relationships must remain separately traceable to the target.
+
+Start from [../assets/editable-single-arrow-convergence-template.svg](../assets/editable-single-arrow-convergence-template.svg) when this pattern applies.
+
 ## Pre-render validation
 
 Before the first render and after every geometry or connector revision, run:

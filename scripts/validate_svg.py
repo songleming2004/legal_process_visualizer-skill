@@ -16,6 +16,9 @@ SIDE_NAMES = {"top", "right", "bottom", "left"}
 NUMBER = r"-?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?"
 PATH_TOKEN = re.compile(rf"[A-Za-z]|{NUMBER}")
 TOLERANCE = 1.0
+VISUAL_SEPARATION = 24.0
+MIN_SHARED_LENGTH = 32.0
+MAX_SHARED_RATIO = 0.35
 
 
 @dataclass(frozen=True)
@@ -40,6 +43,18 @@ class PathGeometry:
     start_delta: tuple[float, float]
     end_delta: tuple[float, float]
     curved: bool
+
+
+@dataclass(frozen=True)
+class ConnectorRecord:
+    edge_id: str
+    source_id: str
+    target_id: str
+    source_side: str
+    target_side: str
+    arrowed: bool
+    classes: frozenset[str]
+    geometry: PathGeometry
 
 
 def svg_files(target: Path) -> list[Path]:
@@ -286,9 +301,107 @@ def boundary_crosses_node(boundary: Rect, node: Rect) -> bool:
     return any(segment_crosses_interior(a, b, node, 0.0) for a, b in sides)
 
 
+def point_distance(first: tuple[float, float], second: tuple[float, float]) -> float:
+    return ((first[0] - second[0]) ** 2 + (first[1] - second[1]) ** 2) ** 0.5
+
+
+def path_length(points: list[tuple[float, float]]) -> float:
+    return sum(point_distance(start, end) for start, end in zip(points, points[1:]))
+
+
+def normalized_direction(start: tuple[float, float], end: tuple[float, float]) -> tuple[int, int]:
+    dx, dy = movement(start, end)
+    return (0 if abs(dx) <= 1e-6 else (1 if dx > 0 else -1),
+            0 if abs(dy) <= 1e-6 else (1 if dy > 0 else -1))
+
+
+def first_turn_point(geometry: PathGeometry) -> tuple[float, float] | None:
+    if geometry.curved or len(geometry.points) < 3:
+        return None
+    previous = normalized_direction(geometry.points[0], geometry.points[1])
+    for index in range(1, len(geometry.points) - 1):
+        following = normalized_direction(geometry.points[index], geometry.points[index + 1])
+        if following != previous:
+            return geometry.points[index]
+        previous = following
+    return None
+
+
+def rectangles_overlap(first: Rect, second: Rect) -> bool:
+    return (
+        max(first.x, second.x) < min(first.right, second.right)
+        and max(first.y, second.y) < min(first.bottom, second.bottom)
+    )
+
+
+def axis_overlap_length(
+    first_start: tuple[float, float], first_end: tuple[float, float],
+    second_start: tuple[float, float], second_end: tuple[float, float]
+) -> float:
+    if abs(first_start[1] - first_end[1]) <= 1e-6 and abs(second_start[1] - second_end[1]) <= 1e-6:
+        if abs(first_start[1] - second_start[1]) > TOLERANCE:
+            return 0.0
+        return max(0.0, min(max(first_start[0], first_end[0]), max(second_start[0], second_end[0]))
+                   - max(min(first_start[0], first_end[0]), min(second_start[0], second_end[0])))
+    if abs(first_start[0] - first_end[0]) <= 1e-6 and abs(second_start[0] - second_end[0]) <= 1e-6:
+        if abs(first_start[0] - second_start[0]) > TOLERANCE:
+            return 0.0
+        return max(0.0, min(max(first_start[1], first_end[1]), max(second_start[1], second_end[1]))
+                   - max(min(first_start[1], first_end[1]), min(second_start[1], second_end[1])))
+    return 0.0
+
+
+def shared_segment_length(first: PathGeometry, second: PathGeometry) -> float:
+    axis_total = sum(
+        axis_overlap_length(a1, a2, b1, b2)
+        for a1, a2 in zip(first.points, first.points[1:])
+        for b1, b2 in zip(second.points, second.points[1:])
+    )
+    suffix_total = 0.0
+    first_index = len(first.points) - 1
+    second_index = len(second.points) - 1
+    while first_index > 0 and second_index > 0:
+        if point_distance(first.points[first_index], second.points[second_index]) > TOLERANCE:
+            break
+        previous_first = first.points[first_index - 1]
+        previous_second = second.points[second_index - 1]
+        if point_distance(previous_first, previous_second) > TOLERANCE:
+            break
+        suffix_total += min(
+            point_distance(previous_first, first.points[first_index]),
+            point_distance(previous_second, second.points[second_index]),
+        )
+        first_index -= 1
+        second_index -= 1
+    return max(axis_total, suffix_total)
+
+
 def is_arrowed_path(path: ET.Element) -> bool:
     classes = set((path.get("class") or "").split())
     return bool(path.get("marker-end") or classes.intersection({"connector", "conditional"}))
+
+
+def connector_records(root: ET.Element, nodes: dict[str, Rect]) -> list[ConnectorRecord]:
+    records: list[ConnectorRecord] = []
+    for index, path in enumerate(root.iter(f"{SVG_NS}path"), start=1):
+        source_id = path.get("data-from")
+        target_id = path.get("data-to")
+        source_side = path.get("data-from-side")
+        target_side = path.get("data-to-side")
+        if not source_id or not target_id or source_id not in nodes or target_id not in nodes:
+            continue
+        if source_side not in SIDE_NAMES or target_side not in SIDE_NAMES:
+            continue
+        try:
+            geometry = parse_connector_path(path.get("d") or "")
+        except ValueError:
+            continue
+        records.append(ConnectorRecord(
+            path.get("id") or f"path#{index}", source_id, target_id,
+            source_side, target_side, is_arrowed_path(path),
+            frozenset((path.get("class") or "").split()), geometry,
+        ))
+    return records
 
 
 def inside_canvas(point: tuple[float, float], canvas: Rect, tol: float = TOLERANCE) -> bool:
@@ -356,6 +469,87 @@ def validate_connectors(root: ET.Element, nodes: dict[str, Rect], canvas: Rect |
             if any(segment_crosses_interior(a, b, rect) for a, b in zip(points, points[1:])):
                 errors.append(f"{edge_id}: connector crosses unrelated node {node_id}")
     return errors
+
+
+def validate_convergence(
+    root: ET.Element, nodes: dict[str, Rect]
+) -> tuple[list[str], list[str]]:
+    errors: list[str] = []
+    warnings: list[str] = []
+    records = connector_records(root, nodes)
+    hub_ids = {
+        group.get("id")
+        for group in root.iter(f"{SVG_NS}g")
+        if group.get("id") and "routing-hub" in set((group.get("class") or "").split())
+    }
+
+    for record in records:
+        if not record.arrowed and not record.classes.intersection({"converging", "leader"}):
+            errors.append(
+                f"{record.edge_id}: arrowless contracted route must be a converging input or explanatory leader"
+            )
+        if "converging" not in record.classes:
+            continue
+        if record.arrowed:
+            errors.append(f"{record.edge_id}: converging inbound route must not carry an arrowhead")
+        if record.target_id not in hub_ids:
+            errors.append(f"{record.edge_id}: converging inbound route must terminate at a routing-hub")
+
+    for hub_id in sorted(hub_ids):
+        incoming = [record for record in records
+                    if record.target_id == hub_id and "converging" in record.classes]
+        outgoing = [record for record in records
+                    if record.source_id == hub_id and record.arrowed]
+        other_arrowed_incoming = [record for record in records
+                                  if record.target_id == hub_id and record.arrowed]
+        if len(incoming) < 2:
+            errors.append(f"{hub_id}: routing hub requires at least two arrowless converging inputs")
+        if len(outgoing) != 1:
+            errors.append(f"{hub_id}: routing hub requires exactly one arrowed outbound connector")
+        if other_arrowed_incoming:
+            errors.append(
+                f"{hub_id}: inbound routes must be arrowless; found "
+                + ", ".join(record.edge_id for record in other_arrowed_incoming)
+            )
+
+    direct = [record for record in records if record.arrowed and record.source_id not in hub_ids]
+    for index, first in enumerate(direct):
+        for second in direct[index + 1:]:
+            targets_overlap = (
+                first.target_id == second.target_id
+                or rectangles_overlap(nodes[first.target_id], nodes[second.target_id])
+            )
+            if not targets_overlap:
+                continue
+
+            pair_name = f"{first.edge_id} + {second.edge_id}"
+            if first.source_side == second.source_side:
+                warnings.append(
+                    f"{pair_name}: same source side and same/overlapping target region; "
+                    f"inspect shared-segment risk or use single-arrow convergence"
+                )
+
+            first_turn = first_turn_point(first.geometry)
+            second_turn = first_turn_point(second.geometry)
+            if first_turn is not None and second_turn is not None:
+                turn_gap = point_distance(first_turn, second_turn)
+                if turn_gap < VISUAL_SEPARATION:
+                    warnings.append(
+                        f"{pair_name}: first turn points are only {turn_gap:.1f}px apart "
+                        f"(< {VISUAL_SEPARATION:.0f}px)"
+                    )
+
+            shared = shared_segment_length(first.geometry, second.geometry)
+            shorter = min(path_length(first.geometry.points), path_length(second.geometry.points))
+            shared_ratio = shared / shorter if shorter > 0 else 0.0
+            if shared >= MIN_SHARED_LENGTH and shared_ratio > MAX_SHARED_RATIO:
+                errors.append(
+                    f"{pair_name}: arrowed connectors share {shared:.1f}px "
+                    f"({shared_ratio:.0%} of the shorter route); use separate routes or "
+                    f"single-arrow convergence"
+                )
+
+    return errors, warnings
 
 
 def validate_boundaries(root: ET.Element, nodes: dict[str, Rect]) -> list[str]:
@@ -439,6 +633,9 @@ def validate(path: Path) -> tuple[list[str], list[str]]:
     nodes, node_warnings = node_rectangles(root)
     warnings.extend(node_warnings)
     errors.extend(validate_connectors(root, nodes, canvas))
+    convergence_errors, convergence_warnings = validate_convergence(root, nodes)
+    errors.extend(convergence_errors)
+    warnings.extend(convergence_warnings)
     errors.extend(validate_boundaries(root, nodes))
     return errors, warnings
 

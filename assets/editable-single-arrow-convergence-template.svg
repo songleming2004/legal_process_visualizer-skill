@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">Editable single-arrow convergence template</title>
+  <desc id="desc">Three fictional source routes converge without arrowheads at a routing hub, followed by one shared arrow to a common target.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth"><path d="M0 0 L12 6 L0 12 Z" fill="#55606D"/></marker>
+    <style>
+      .page{fill:#F7F6F2}.title{font:700 30px 'Noto Sans SC','PingFang SC',sans-serif;fill:#1F2933}.subtitle{font:400 14px 'Noto Sans SC','PingFang SC',sans-serif;fill:#52606D}.heading{font:700 19px 'Noto Sans SC','PingFang SC',sans-serif;fill:#1F2933}.body{font:400 14px 'Noto Sans SC','PingFang SC',sans-serif;fill:#37474F}.note{font:400 12px 'Noto Sans SC','PingFang SC',sans-serif;fill:#64748B}.edge-label{font:600 13px 'Noto Sans SC','PingFang SC',sans-serif;fill:#475563}.source{fill:#ECEFF1;stroke:#84909A;stroke-width:1.5}.target{fill:#E7EEF6;stroke:#6783A2;stroke-width:1.7}.converging{fill:none;stroke:#55606D;stroke-width:2}.connector{fill:none;stroke:#55606D;stroke-width:2.4;marker-end:url(#arrow)}.hub{fill:#55606D;stroke:#F7F6F2;stroke-width:2}
+    </style>
+  </defs>
+  <rect class="page" width="1200" height="720"/>
+  <text class="title" x="600" y="48" text-anchor="middle">单箭头汇流｜去敏模板</text>
+  <text class="subtitle" x="600" y="76" text-anchor="middle">三条来源线在显式汇流点终止，仅由共享段携带唯一箭头</text>
+
+  <path id="edge-source-a-hub" class="converging" d="M350 195 H658 V352" data-from="source-a" data-to="merge-hub" data-from-side="right" data-to-side="top"/>
+  <path id="edge-source-b-hub" class="converging" d="M350 360 H650" data-from="source-b" data-to="merge-hub" data-from-side="right" data-to-side="left"/>
+  <path id="edge-source-c-hub" class="converging" d="M350 525 H658 V368" data-from="source-c" data-to="merge-hub" data-from-side="right" data-to-side="bottom"/>
+  <path id="edge-hub-target" class="connector" d="M666 360 H850" data-from="merge-hub" data-to="common-target" data-from-side="right" data-to-side="left"/>
+
+  <text class="edge-label" x="455" y="180">来源关系甲</text>
+  <text class="edge-label" x="455" y="345">来源关系乙</text>
+  <text class="edge-label" x="455" y="510">来源关系丙</text>
+  <text class="edge-label" x="758" y="345" text-anchor="middle">汇总后共同指向</text>
+
+  <g id="source-a"><rect class="source" x="80" y="140" width="270" height="110" rx="9"/><text class="heading" x="108" y="176">来源主体甲</text><text class="body" x="108" y="205">独立说明其行为或关系</text><text class="note" x="108" y="232">（示例依据A）</text></g>
+  <g id="source-b"><rect class="source" x="80" y="305" width="270" height="110" rx="9"/><text class="heading" x="108" y="341">来源主体乙</text><text class="body" x="108" y="370">独立说明其行为或关系</text><text class="note" x="108" y="397">（示例依据B）</text></g>
+  <g id="source-c"><rect class="source" x="80" y="470" width="270" height="110" rx="9"/><text class="heading" x="108" y="506">来源主体丙</text><text class="body" x="108" y="535">独立说明其行为或关系</text><text class="note" x="108" y="562">（示例依据C）</text></g>
+  <g id="merge-hub" class="routing-hub" data-routing-only="true"><title>纯视觉汇流点，不代表独立法律主体</title><rect class="hub" x="650" y="352" width="16" height="16" rx="8"/></g>
+  <g id="common-target"><rect class="target" x="850" y="300" width="280" height="120" rx="9"/><text class="heading" x="880" y="340">共同目标节点</text><text class="body" x="880" y="370">仅接收一条带箭头的共享线</text><text class="note" x="880" y="400">（示例依据D）</text></g>
+
+  <text class="subtitle" x="80" y="665">汇流前：每条来源线无箭头且保持可辨识｜汇流后：一条共享线、一个箭头、一个明确目标</text>
+  <text class="subtitle" x="80" y="692">汇流点是路由结构，不自动代表主体、事件或法律结论。</text>
+</svg>

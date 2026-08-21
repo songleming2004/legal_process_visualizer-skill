@@ -135,7 +135,7 @@ When editable SVG is requested:
 - avoid `foreignObject` when ordinary SVG text can preserve editor compatibility;
 - keep connectors behind nodes and attach arrows cleanly to node boundaries;
 - avoid crossed connectors, clipped labels, and ambiguous arrow direction;
-- use line style only for relationship nature: solid arrows for ordinary or other state-changing transitions, dashed arrows for conditional, exceptional, optional, or procedure-conversion routes, arrowless dashed leaders for explanatory associations, and dashed borders for module or scope boundaries;
+- use line style only for relationship nature: solid arrows for ordinary or other state-changing transitions, dashed arrows for conditional, exceptional, optional, or procedure-conversion routes, arrowless dashed leaders for explanatory associations, arrowless solid inbound routes only for explicit single-arrow convergence at a routing hub, and dashed borders for module or scope boundaries;
 - use low-saturation category colors with neutral structural lines;
 - pair color with headings or lane labels so color is not the only encoding;
 - preserve a formal legal-document tone even when using several category colors.
@@ -150,6 +150,9 @@ Choose geometry according to the relationship rather than applying one connector
 - Connector geometry does not encode legal meaning. Continue to encode ordinary, conditional, disputed, explanatory, and scope relationships through line style and explicit labels.
 - Curved connectors must leave the declared source side and enter the declared target side perpendicularly. Keep curvature and spacing consistent within the same diagram.
 - If curves would create tighter label collisions or ambiguous shared routes, use orthogonal connectors, add a relationship hub, or split the diagram instead.
+- Treat two or more inbound routes as a shared-segment risk when their source nodes depart from the same side toward the same or overlapping target region, their first turns are closer than the diagram's visually distinguishable spacing, or a long portion of their routes overlaps before the target.
+- When several routes genuinely converge and would otherwise share an intermediate segment, use **single-arrow convergence**: terminate each inbound route without an arrowhead at an explicit routing hub, then draw exactly one arrowed connector from the hub to the common target. Keep each source route and label distinguishable before the hub.
+- A routing hub is a visual aggregation device, not a new legal subject or procedural event unless the source independently supports that meaning. If the relationships must remain legally distinct through arrival, reroute them separately instead of converging them.
 
 Recommended category mapping:
 
@@ -160,7 +163,7 @@ Recommended category mapping:
 - default, refusal, sanction, or referral risk: muted red;
 - common intake and neutral notes: gray.
 
-Start from [assets/editable-legal-flow-template.svg](assets/editable-legal-flow-template.svg) for procedural sequences. Use [assets/editable-legal-relationship-template.svg](assets/editable-legal-relationship-template.svg) for fund flows, transfers, attribution, ownership, or other actor-to-actor relationships where curved routes improve separation. Before creating or substantially revising an SVG, read both [references/editable-svg-standard.md](references/editable-svg-standard.md) and [references/connector-integrity.md](references/connector-integrity.md).
+Start from [assets/editable-legal-flow-template.svg](assets/editable-legal-flow-template.svg) for procedural sequences. Use [assets/editable-legal-relationship-template.svg](assets/editable-legal-relationship-template.svg) for fund flows, transfers, attribution, ownership, or other actor-to-actor relationships where curved routes improve separation. Use [assets/editable-single-arrow-convergence-template.svg](assets/editable-single-arrow-convergence-template.svg) when several sources must visibly converge on one target. Before creating or substantially revising an SVG, read both [references/editable-svg-standard.md](references/editable-svg-standard.md) and [references/connector-integrity.md](references/connector-integrity.md).
 
 ## Verify before delivery
 
@@ -181,7 +184,7 @@ Start from [assets/editable-legal-flow-template.svg](assets/editable-legal-flow-
 
    `python3 scripts/validate_svg.py <file-or-directory>`
 
-   Treat any missing connector contract, endpoint detached from its declared node, wrong approach direction, connector crossing an unrelated node, or module boundary crossing a node as a hard failure. Fix it before rendering.
+   Treat any missing connector contract, endpoint detached from its declared node, wrong approach direction, connector crossing an unrelated node, excessive shared intermediate segment, malformed single-arrow convergence, or module boundary crossing a node as a hard failure. Fix it before rendering.
 10. Render each SVG to a raster preview and inspect the full image, a readable 100% view, and enlarged crops of dense regions for clipping, overflow, node or boundary overlap, connector collisions, ambiguous arrow direction, unreadable citations, and inconsistent spacing.
 11. Always create enlarged connector crops when a node has multiple incident edges, a route crosses lanes or modules, a polyline has three or more segments, solid and dashed lines meet, or edge labels are close together.
 12. Check semantic legibility even after automated validation passes. A geometrically valid connector still fails if it passes through another node, appears to originate from a nearby node, approaches the target tangentially or outward, shares a segment that implies a false merged relationship, or places its label closer to another edge.
