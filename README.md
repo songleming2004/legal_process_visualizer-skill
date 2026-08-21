@@ -29,7 +29,7 @@ The usual output is an editable SVG, so names, wording, colors, positions, and c
 
 ## Anonymized visual examples
 
-![Anonymized examples of a litigation timeline, procedural flow, and legal relationship map](assets/readme-anonymized-examples.svg)
+![Anonymized examples of a litigation timeline, procedural flow, and legal relationship map](assets/readme-anonymized-examples-en.svg)
 
 This fictional gallery illustrates three common outputs in one view:
 
