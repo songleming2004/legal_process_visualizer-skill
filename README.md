@@ -27,6 +27,18 @@ The usual output is an editable SVG, so names, wording, colors, positions, and c
 - It checks whether each arrow clearly connects the intended subjects, so a relationship is not left pointing into empty space or toward the wrong heading.
 - It can work from a limited source set, such as one judgment only, or from a broader set of governing materials when requested.
 
+## Anonymized visual examples
+
+![Anonymized examples of a litigation timeline, procedural flow, and legal relationship map](assets/readme-anonymized-examples.svg)
+
+This fictional gallery illustrates three common outputs in one view:
+
+- a cross-proceeding timeline that preserves chronology and procedural posture;
+- a procedural flow that separates the ordinary route from a refusal or exception;
+- a relationship and remedy map that states who holds, controls, transfers, or must restore an asset.
+
+All names, dates, paragraph numbers, and authorities in the gallery are placeholders. They do not reproduce or refer to any real person, entity, dispute, judgment, or asset.
+
 ## Examples
 
 ### 1. Turn one judgment into three coordinated diagrams

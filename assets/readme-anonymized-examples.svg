@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1200" viewBox="0 0 1600 1200" role="img" aria-labelledby="title desc">
+  <title id="title">Legal Process Visualizer anonymized example gallery</title>
+  <desc id="desc">Three fictional and anonymized examples: a litigation timeline, a procedural flow, and a legal relationship and remedy map.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L12 6 L0 12 Z" fill="#55606D"/>
+    </marker>
+    <style>
+      .page{fill:#F7F6F2}.panel{fill:#FCFCFA;stroke:#C5CBD1;stroke-width:1.5}.title{font:600 32px 'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;fill:#1F2933}.subtitle{font:400 15px 'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;fill:#52606D}.section{font:600 21px 'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;fill:#25313B}.heading{font:600 16px 'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;fill:#1F2933}.body{font:400 13px 'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;fill:#37474F}.source{font:500 11px 'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;fill:#52606D}.edgeLabel{font:500 12px 'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;fill:#475563}.date{font:600 12px 'IBM Plex Mono','SFMono-Regular',monospace;fill:#34414C}.neutral{fill:#ECEFF1;stroke:#84909A;stroke-width:1.5}.stage{fill:#E7EEF6;stroke:#6783A2;stroke-width:1.5}.review{fill:#EEE9F5;stroke:#86729F;stroke-width:1.5}.terminal{fill:#F4ECDC;stroke:#A48755;stroke-width:1.5}.risk{fill:#F3E5E2;stroke:#A66F67;stroke-width:1.5}.accelerated{fill:#E5F0EA;stroke:#668B78;stroke-width:1.5}.connector{fill:none;stroke:#55606D;stroke-width:2;marker-end:url(#arrow)}.conditional{fill:none;stroke:#8A625D;stroke-width:2;stroke-dasharray:8 7;marker-end:url(#arrow)}.legendLine{fill:none;stroke:#55606D;stroke-width:2}.legendDash{fill:none;stroke:#8A625D;stroke-width:2;stroke-dasharray:8 7}
+    </style>
+  </defs>
+
+  <rect class="page" width="1600" height="1200"/>
+  <text class="title" x="800" y="50" text-anchor="middle">匿名图例｜Anonymized examples</text>
+  <text class="subtitle" x="800" y="80" text-anchor="middle">所有主体、日期和依据均为占位示例，不对应任何真实案件｜All names, dates, and authorities are fictional placeholders</text>
+
+  <rect class="panel" x="60" y="115" width="1480" height="305" rx="12"/>
+  <rect class="panel" x="60" y="455" width="720" height="665" rx="12"/>
+  <rect class="panel" x="820" y="455" width="720" height="665" rx="12"/>
+  <text class="section" x="90" y="155">A｜跨程序时间线 / Cross-proceeding timeline</text>
+  <text class="section" x="90" y="495">B｜程序与分支 / Procedure and branches</text>
+  <text class="section" x="850" y="495">C｜主体关系与救济 / Relationships and remedies</text>
+
+  <path id="edge-t1-t2" class="connector" d="M320 292.5 H390" data-from="T1" data-to="T2" data-from-side="right" data-to-side="left"/>
+  <path id="edge-t2-t3" class="connector" d="M610 292.5 H680" data-from="T2" data-to="T3" data-from-side="right" data-to-side="left"/>
+  <path id="edge-t3-t4" class="connector" d="M900 292.5 H970" data-from="T3" data-to="T4" data-from-side="right" data-to-side="left"/>
+  <path id="edge-t4-t5" class="connector" d="M1190 292.5 H1260" data-from="T4" data-to="T5" data-from-side="right" data-to-side="left"/>
+
+  <path id="edge-p1-p2" class="connector" d="M380 615 H460" data-from="P1" data-to="P2" data-from-side="right" data-to-side="left"/>
+  <path id="edge-p2-p3" class="connector" d="M595 670 V760" data-from="P2" data-to="P3" data-from-side="bottom" data-to-side="top"/>
+  <path id="edge-p2-p5" class="conditional" d="M595 560 V525 H420 V720 H245 V760" data-from="P2" data-to="P5" data-from-side="top" data-to-side="top"/>
+  <path id="edge-p3-p4" class="connector" d="M595 870 V960" data-from="P3" data-to="P4" data-from-side="bottom" data-to-side="top"/>
+
+  <path id="edge-r1-r2" class="connector" d="M1120 602.5 H1240" data-from="R1" data-to="R2" data-from-side="right" data-to-side="left"/>
+  <path id="edge-r2-r4" class="connector" d="M1365 655 V770" data-from="R2" data-to="R4" data-from-side="bottom" data-to-side="top"/>
+  <path id="edge-r3-r4" class="conditional" d="M1120 822.5 H1240" data-from="R3" data-to="R4" data-from-side="right" data-to-side="left"/>
+  <path id="edge-r4-r6" class="connector" d="M1365 875 V970" data-from="R4" data-to="R6" data-from-side="bottom" data-to-side="top"/>
+  <path id="edge-r5-r6" class="connector" d="M1120 1022.5 H1240" data-from="R5" data-to="R6" data-from-side="right" data-to-side="left"/>
+
+  <text class="edgeLabel" x="355" y="278" text-anchor="middle">受理</text>
+  <text class="edgeLabel" x="645" y="278" text-anchor="middle">审理</text>
+  <text class="edgeLabel" x="935" y="278" text-anchor="middle">上诉</text>
+  <text class="edgeLabel" x="1225" y="278" text-anchor="middle">生效</text>
+  <text class="edgeLabel" x="420" y="600" text-anchor="middle">准许</text>
+  <text class="edgeLabel" x="330" y="705" text-anchor="middle">不准许</text>
+  <text class="edgeLabel" x="1160" y="590">持有</text>
+  <text class="edgeLabel" x="1380" y="715">安排代持</text>
+  <text class="edgeLabel" x="1160" y="810">指示（如有）</text>
+  <text class="edgeLabel" x="1380" y="925">登记持有</text>
+  <text class="edgeLabel" x="1160" y="1010">命令恢复</text>
+
+  <g id="T1"><rect class="neutral" x="100" y="240" width="220" height="105" rx="8"/><text class="date" x="120" y="267">20XX-01</text><text class="heading" x="120" y="294">提交申请</text><text class="body" x="120" y="318">申请人启动程序</text><text class="source" x="120" y="337">（示例依据 A-1）</text></g>
+  <g id="T2"><rect class="stage" x="390" y="240" width="220" height="105" rx="8"/><text class="date" x="410" y="267">20XX-03</text><text class="heading" x="410" y="294">一审裁判</text><text class="body" x="410" y="318">法院作出决定</text><text class="source" x="410" y="337">（示例判决[10]）</text></g>
+  <g id="T3"><rect class="review" x="680" y="240" width="220" height="105" rx="8"/><text class="date" x="700" y="267">20XX-05</text><text class="heading" x="700" y="294">提出上诉</text><text class="body" x="700" y="318">进入复审程序</text><text class="source" x="700" y="337">（示例依据 B-2）</text></g>
+  <g id="T4"><rect class="review" x="970" y="240" width="220" height="105" rx="8"/><text class="date" x="990" y="267">20XX-09</text><text class="heading" x="990" y="294">上诉裁判</text><text class="body" x="990" y="318">维持／变更／发回</text><text class="source" x="990" y="337">（示例判决[25]）</text></g>
+  <g id="T5"><rect class="terminal" x="1260" y="240" width="220" height="105" rx="8"/><text class="date" x="1280" y="267">20XX-10</text><text class="heading" x="1280" y="294">履行或执行</text><text class="body" x="1280" y="318">程序进入终局阶段</text><text class="source" x="1280" y="337">（示例依据 C-1）</text></g>
+
+  <g id="P1"><rect class="neutral" x="110" y="560" width="270" height="110" rx="8"/><text class="heading" x="135" y="592">提交附属申请</text><text class="body" x="135" y="620">申请人请求程序许可</text><text class="source" x="135" y="651">（示例规则 1）</text></g>
+  <g id="P2"><rect class="stage" x="460" y="560" width="270" height="110" rx="8"/><text class="heading" x="485" y="592">法院审查许可</text><text class="body" x="485" y="620">判断是否符合门槛</text><text class="source" x="485" y="651">（示例规则 2）</text></g>
+  <g id="P3"><rect class="accelerated" x="460" y="760" width="270" height="110" rx="8"/><text class="heading" x="485" y="792">送达与答辩</text><text class="body" x="485" y="820">期限从有效送达起算</text><text class="source" x="485" y="851">（示例规则 3）</text></g>
+  <g id="P4"><rect class="terminal" x="460" y="960" width="270" height="110" rx="8"/><text class="heading" x="485" y="992">裁判与后续救济</text><text class="body" x="485" y="1020">判给、驳回或准许上诉</text><text class="source" x="485" y="1051">（示例规则 4）</text></g>
+  <g id="P5"><rect class="risk" x="110" y="760" width="270" height="110" rx="8"/><text class="heading" x="135" y="792">申请不获许可</text><text class="body" x="135" y="820">该附属路径终止</text><text class="source" x="135" y="851">（示例规则 2）</text></g>
+
+  <g id="R1"><rect class="neutral" x="870" y="550" width="250" height="105" rx="8"/><text class="heading" x="895" y="582">示例信托</text><text class="body" x="895" y="610">持有项目公司权益</text><text class="source" x="895" y="638">（示例依据 D-1）</text></g>
+  <g id="R2"><rect class="stage" x="1240" y="550" width="250" height="105" rx="8"/><text class="heading" x="1265" y="582">项目公司甲</text><text class="body" x="1265" y="610">原始资产持有人</text><text class="source" x="1265" y="638">（示例依据 D-2）</text></g>
+  <g id="R3"><rect class="risk" x="870" y="770" width="250" height="105" rx="8"/><text class="heading" x="895" y="802">控制主体乙</text><text class="body" x="895" y="830">被主张实际控制</text><text class="source" x="895" y="858">（示例判决[18]）</text></g>
+  <g id="R4"><rect class="neutral" x="1240" y="770" width="250" height="105" rx="8"/><text class="heading" x="1265" y="802">代持主体丙</text><text class="body" x="1265" y="830">登记持有争议资产</text><text class="source" x="1265" y="858">（示例判决[22]）</text></g>
+  <g id="R5"><rect class="review" x="870" y="970" width="250" height="105" rx="8"/><text class="heading" x="895" y="1002">法院救济</text><text class="body" x="895" y="1030">命令返还或恢复登记</text><text class="source" x="895" y="1058">（示例判决[35]）</text></g>
+  <g id="R6"><rect class="terminal" x="1240" y="970" width="250" height="105" rx="8"/><text class="heading" x="1265" y="1002">争议资产</text><text class="body" x="1265" y="1030">恢复至应有状态</text><text class="source" x="1265" y="1058">（示例判决[36]）</text></g>
+
+  <path class="legendLine" d="M90 1160 H145"/><text class="subtitle" x="160" y="1165">实线＝通常程序或状态变化</text>
+  <path class="legendDash" d="M445 1160 H500"/><text class="subtitle" x="515" y="1165">虚线＝条件、例外或可选路径</text>
+  <text class="subtitle" x="1510" y="1165" text-anchor="end">示意用途｜非法律意见</text>
+</svg>
