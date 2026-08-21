@@ -126,7 +126,11 @@ Treat these as hard failures:
 - module or scope boundary crosses a node;
 - unsupported path geometry prevents reliable endpoint validation.
 
-The validator handles ordinary untransformed SVG nodes whose primary geometry is a `<rect>`, together with absolute `M`, `L`, `H`, `V`, `C`, and `S` connector paths. It samples cubic curves to check unrelated-node crossings and uses control-point tangents to check source departure and target approach. When using transforms, relative commands, arcs, quadratic curves, polygons, or diamonds, either extend the deterministic validator or perform and record an equivalent bounding-box check. Do not silently downgrade an unvalidated route to “looks correct.”
+The validator handles ordinary untransformed SVG nodes whose primary geometry is a `<rect>` and standard decision nodes declared as `<g data-node-shape="decision">` with an untransformed four-point `<polygon>`. A decision polygon must place its vertices at the top, right, bottom, and left midpoints of its bounding box. Connectors attach to those vertices, and every arrowed route leaving the decision must include a non-empty `data-label`. The validator also handles absolute `M`, `L`, `H`, `V`, `C`, and `S` connector paths. It samples cubic curves to check unrelated-node crossings and uses control-point tangents to check source departure and target approach.
+
+Transforms, relative commands, arcs, quadratic curves, arbitrary polygons, and path-based diamonds remain unsupported. If a required shape or route cannot be validated deterministically, perform and record an equivalent geometry inspection; if that inspection is also unavailable, replace the diamond with a rectangular gateway card. Do not silently downgrade an unvalidated route to “looks correct.”
+
+Decision branches must remain distinct after leaving the diamond. Do not use single-arrow convergence on alternative outgoing routes because it would erase the choice. They may later reconverge only at a named common procedural state when each route remains visibly identifiable up to that state.
 
 Rendered text boundaries remain a separate visual gate. Font fallback and actual glyph shaping cannot be established reliably by the static XML validator, so render the latest SVG in the target browser or editor and inspect every node and edge label for overflow or collision.
 

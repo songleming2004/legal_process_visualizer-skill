@@ -2,6 +2,24 @@
 
 Read only the section that matches the requested proceeding. Combine models when the matter crosses procedural stages.
 
+## Decision gateways and card shapes
+
+Use shape to distinguish procedural meaning, not to decorate the page:
+
+| Shape | Meaning | Suitable wording | Required routing |
+|---|---|---|---|
+| Rectangle | act, filing, document, decision, result, or procedural state | `法院作出许可决定` | ordinary progression or any supported routes |
+| Diamond | question, threshold, or route selection that changes what happens next | `是否准许许可？` | normally one inbound route and at least two visibly distinct, labeled outcomes |
+| Routing hub | visual aggregation only; no independent legal meaning | no substantive legal text | two or more arrowless inbound routes and exactly one arrowed outbound route |
+
+Use a diamond for binary or multi-way gateways such as `是否有效送达？`, `是否具有管辖权？`, or `适用何种程序轨道？`. Put `是／否`, `准许／不准许`, or the track names on the outgoing routes. Do not rely on left/right placement or color to communicate the result.
+
+Do not use a diamond for a ruling merely because the ruling involved judgment. If the ruling itself is the step, use a rectangle. If its answer controls two or more routes, represent the ruling as a rectangle followed by a compact decision gateway, or use the gateway alone when the act of deciding is already obvious and the source supports that simplification.
+
+A multi-factor test that is explained but does not visibly branch should be a rectangular test card, condition matrix, or issue tree. A gateway with only one visible continuation is not a genuine decision diamond.
+
+Use a diamond only when the output format and available tools can preserve editability, real-boundary connector attachment, readable text, branch labels, and deterministic validation or an explicitly recorded equivalent inspection. Otherwise use a rectangular gateway card with the same labeled branches. Semantic clarity takes priority over the conventional shape.
+
 ## Civil litigation
 
 Useful lanes: claimant/plaintiff, defendant, court, third parties, enforcement body.

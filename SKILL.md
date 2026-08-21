@@ -82,6 +82,19 @@ Useful coordinated sets include:
 
 Use stable lanes for actors or procedural tracks. Use branches for legal choices or factual conditions, not merely to decorate the diagram. Label every non-obvious edge (`是／否`, `可选`, `转介`, `上诉`, `发回`, `中止`).
 
+### Choose decision gateways deliberately
+
+Use a diamond only when a legal or procedural question produces at least two materially different downstream routes. Typical examples include whether jurisdiction exists, service is effective, a deadline was met, permission or leave is granted, an appeal is available, or a matter belongs on one of several procedural tracks.
+
+Apply both of these gates before drawing a diamond:
+
+1. **Semantic gate:** the node is a genuine question, test, or route selection with at least two visible outcomes. Write it as a compact question or test. Do not use a diamond for an act, document, adjudicative decision, explanation, terminal result, or a multi-factor analysis that does not itself change the route.
+2. **Capability gate:** the chosen format and available tools can create the diamond as an editable shape, attach connectors to its real boundary, keep its text legible, label every outgoing outcome, and validate or equivalently inspect the result. If any of these capabilities is unavailable, do not draw a diamond. Use a rectangular card clearly titled as a condition check or gateway, then show the same distinct, labeled outgoing routes. Never use an approximate or unvalidated diamond merely to satisfy a shape convention.
+
+A decision gateway normally has one incoming route and at least two labeled outgoing routes. Put consequences in edge labels or destination cards rather than crowding them into the diamond. A court or tribunal's act or result, such as “法院作出许可决定” or “许可申请被驳回”, remains a rectangle; use a following diamond such as “是否准许许可？” only when the visual needs to show the resulting alternatives.
+
+Do not impose a diamond quota. A linear procedure with no material route choice may correctly contain none. Read the decision-gateway section of [references/legal-diagram-models.md](references/legal-diagram-models.md) whenever the model contains branching logic.
+
 Uniform flowchart cards are not mandatory. When density or comparison requires it, combine a main flow with condition matrices, deadline timelines, authority tables, exception lists, procedure-conversion diagrams, and clearly separated error-prone-point callouts. Keep the legal relationship, not visual uniformity, as the organizing principle.
 
 For litigation and other recurring legal patterns, read only the relevant parts of [references/legal-diagram-models.md](references/legal-diagram-models.md).

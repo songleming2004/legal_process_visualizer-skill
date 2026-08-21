@@ -70,12 +70,49 @@ def number(element: ET.Element, name: str) -> float:
     return float(raw)
 
 
-def node_rectangles(root: ET.Element) -> tuple[dict[str, Rect], list[str]]:
+def polygon_points(element: ET.Element) -> list[tuple[float, float]]:
+    raw = element.get("points") or ""
+    values = re.findall(NUMBER, raw)
+    if len(values) != 8:
+        raise ValueError("decision polygon must contain exactly four coordinate pairs")
+    return [(float(values[index]), float(values[index + 1])) for index in range(0, 8, 2)]
+
+
+def node_geometries(root: ET.Element) -> tuple[dict[str, Rect], dict[str, str], list[str]]:
     nodes: dict[str, Rect] = {}
+    node_shapes: dict[str, str] = {}
     warnings: list[str] = []
     for group in root.iter(f"{SVG_NS}g"):
         node_id = group.get("id")
         if not node_id:
+            continue
+        if group.get("data-node-shape") == "decision":
+            polygon = group.find(f"{SVG_NS}polygon")
+            if polygon is None:
+                warnings.append(f"node {node_id}: decision node has no polygon")
+                continue
+            if group.get("transform") or polygon.get("transform"):
+                warnings.append(f"node {node_id}: transforms prevent deterministic boundary validation")
+                continue
+            try:
+                points = polygon_points(polygon)
+                xs = [point[0] for point in points]
+                ys = [point[1] for point in points]
+                bounds = Rect(min(xs), min(ys), max(xs) - min(xs), max(ys) - min(ys))
+                expected = {
+                    (bounds.x + bounds.width / 2, bounds.y),
+                    (bounds.right, bounds.y + bounds.height / 2),
+                    (bounds.x + bounds.width / 2, bounds.bottom),
+                    (bounds.x, bounds.y + bounds.height / 2),
+                }
+                if bounds.width <= 0 or bounds.height <= 0 or set(points) != expected:
+                    raise ValueError(
+                        "decision polygon vertices must be the top, right, bottom, and left midpoints"
+                    )
+                nodes[node_id] = bounds
+                node_shapes[node_id] = "decision"
+            except ValueError as exc:
+                warnings.append(f"node {node_id}: {exc}")
             continue
         rect = group.find(f"{SVG_NS}rect")
         if rect is None:
@@ -88,9 +125,10 @@ def node_rectangles(root: ET.Element) -> tuple[dict[str, Rect], list[str]]:
                 number(rect, "x"), number(rect, "y"),
                 number(rect, "width"), number(rect, "height")
             )
+            node_shapes[node_id] = "rect"
         except ValueError as exc:
             warnings.append(f"node {node_id}: {exc}")
-    return nodes, warnings
+    return nodes, node_shapes, warnings
 
 
 def cubic_point(
@@ -228,8 +266,19 @@ def parse_connector_path(path_data: str, curve_samples: int = 32) -> PathGeometr
     return PathGeometry(points, start_delta, end_delta, curved)
 
 
-def on_side(point: tuple[float, float], rect: Rect, side: str, tol: float = TOLERANCE) -> bool:
+def on_side(
+    point: tuple[float, float], rect: Rect, side: str,
+    shape: str = "rect", tol: float = TOLERANCE
+) -> bool:
     x, y = point
+    if shape == "decision":
+        vertices = {
+            "top": (rect.x + rect.width / 2, rect.y),
+            "right": (rect.right, rect.y + rect.height / 2),
+            "bottom": (rect.x + rect.width / 2, rect.bottom),
+            "left": (rect.x, rect.y + rect.height / 2),
+        }
+        return point_distance(point, vertices[side]) <= tol
     if side == "top":
         return abs(y - rect.y) <= tol and rect.x - tol <= x <= rect.right + tol
     if side == "right":
@@ -289,6 +338,44 @@ def segment_crosses_interior(
         if lower > upper:
             return False
     return upper > 0.0 and lower < 1.0 and lower <= upper
+
+
+def point_inside_diamond(point: tuple[float, float], bounds: Rect, tol: float = TOLERANCE) -> bool:
+    half_width = bounds.width / 2
+    half_height = bounds.height / 2
+    if half_width <= tol or half_height <= tol:
+        return False
+    center_x = bounds.x + half_width
+    center_y = bounds.y + half_height
+    return (
+        abs(point[0] - center_x) / (half_width - tol)
+        + abs(point[1] - center_y) / (half_height - tol)
+    ) < 1.0
+
+
+def segment_crosses_diamond_interior(
+    start: tuple[float, float], end: tuple[float, float], bounds: Rect
+) -> bool:
+    # A connector segment is linear between validator samples. Sampling that segment
+    # densely is deterministic and avoids treating the diamond's empty bounding-box
+    # corners as node interior.
+    length = point_distance(start, end)
+    samples = max(2, int(length / 2) + 1)
+    return any(
+        point_inside_diamond((
+            start[0] + (end[0] - start[0]) * step / samples,
+            start[1] + (end[1] - start[1]) * step / samples,
+        ), bounds)
+        for step in range(samples + 1)
+    )
+
+
+def segment_crosses_node_interior(
+    start: tuple[float, float], end: tuple[float, float], bounds: Rect, shape: str
+) -> bool:
+    if shape == "decision":
+        return segment_crosses_diamond_interior(start, end, bounds)
+    return segment_crosses_interior(start, end, bounds)
 
 
 def boundary_crosses_node(boundary: Rect, node: Rect) -> bool:
@@ -411,7 +498,9 @@ def inside_canvas(point: tuple[float, float], canvas: Rect, tol: float = TOLERAN
     )
 
 
-def validate_connectors(root: ET.Element, nodes: dict[str, Rect], canvas: Rect | None) -> list[str]:
+def validate_connectors(
+    root: ET.Element, nodes: dict[str, Rect], node_shapes: dict[str, str], canvas: Rect | None
+) -> list[str]:
     errors: list[str] = []
     for index, path in enumerate(root.iter(f"{SVG_NS}path"), start=1):
         arrowed = is_arrowed_path(path)
@@ -435,10 +524,10 @@ def validate_connectors(root: ET.Element, nodes: dict[str, Rect], canvas: Rect |
             errors.append(f"{edge_id}: sides must be one of {sorted(SIDE_NAMES)}")
             continue
         if source_id not in nodes:
-            errors.append(f"{edge_id}: source node {source_id!r} has no untransformed rect")
+            errors.append(f"{edge_id}: source node {source_id!r} has no supported geometry")
             continue
         if target_id not in nodes:
-            errors.append(f"{edge_id}: target node {target_id!r} has no untransformed rect")
+            errors.append(f"{edge_id}: target node {target_id!r} has no supported geometry")
             continue
 
         try:
@@ -450,9 +539,9 @@ def validate_connectors(root: ET.Element, nodes: dict[str, Rect], canvas: Rect |
         points = geometry.points
         source_rect = nodes[source_id]
         target_rect = nodes[target_id]
-        if not on_side(points[0], source_rect, source_side):
+        if not on_side(points[0], source_rect, source_side, node_shapes[source_id]):
             errors.append(f"{edge_id}: start point is detached from {source_id}.{source_side}")
-        if not on_side(points[-1], target_rect, target_side):
+        if not on_side(points[-1], target_rect, target_side, node_shapes[target_id]):
             errors.append(f"{edge_id}: end point is detached from {target_id}.{target_side}")
 
         if not departs_outward(geometry.start_delta, source_side):
@@ -466,8 +555,38 @@ def validate_connectors(root: ET.Element, nodes: dict[str, Rect], canvas: Rect |
         for node_id, rect in nodes.items():
             if node_id in {source_id, target_id}:
                 continue
-            if any(segment_crosses_interior(a, b, rect) for a, b in zip(points, points[1:])):
+            if any(
+                segment_crosses_node_interior(a, b, rect, node_shapes[node_id])
+                for a, b in zip(points, points[1:])
+            ):
                 errors.append(f"{edge_id}: connector crosses unrelated node {node_id}")
+    return errors
+
+
+def validate_decisions(root: ET.Element, nodes: dict[str, Rect]) -> list[str]:
+    errors: list[str] = []
+    decision_ids = {
+        group.get("id")
+        for group in root.iter(f"{SVG_NS}g")
+        if group.get("id") and group.get("data-node-shape") == "decision"
+    }
+    for decision_id in sorted(decision_ids):
+        if decision_id not in nodes:
+            errors.append(f"{decision_id}: decision geometry is unsupported or malformed")
+            continue
+        outgoing = [
+            path for path in root.iter(f"{SVG_NS}path")
+            if path.get("data-from") == decision_id and is_arrowed_path(path)
+        ]
+        if len(outgoing) < 2:
+            errors.append(f"{decision_id}: decision gateway requires at least two arrowed outcomes")
+        targets = {path.get("data-to") for path in outgoing if path.get("data-to")}
+        if len(outgoing) >= 2 and len(targets) < 2:
+            errors.append(f"{decision_id}: decision outcomes must lead to distinct target nodes")
+        for path in outgoing:
+            if not (path.get("data-label") or "").strip():
+                edge_id = path.get("id") or "unnamed decision edge"
+                errors.append(f"{edge_id}: decision outcome requires non-empty data-label")
     return errors
 
 
@@ -630,9 +749,10 @@ def validate(path: Path) -> tuple[list[str], list[str]]:
     if "§" not in source_text and "Rule" not in source_text and "Article" not in source_text and "依据" not in source_text:
         warnings.append("no visible authority marker found; confirm whether citations are required")
 
-    nodes, node_warnings = node_rectangles(root)
+    nodes, node_shapes, node_warnings = node_geometries(root)
     warnings.extend(node_warnings)
-    errors.extend(validate_connectors(root, nodes, canvas))
+    errors.extend(validate_connectors(root, nodes, node_shapes, canvas))
+    errors.extend(validate_decisions(root, nodes))
     convergence_errors, convergence_warnings = validate_convergence(root, nodes)
     errors.extend(convergence_errors)
     warnings.extend(convergence_warnings)
