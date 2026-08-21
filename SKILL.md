@@ -53,6 +53,16 @@ For a complete-process or reference-matching project, read [references/detail-co
    - governmental authority from contractual, arbitral, professional, or industry self-regulation.
 6. Never invent a missing deadline. Label it “规则未规定／未设固定期限” and cite the provision that creates the step when possible.
 
+For relationship, ownership, responsibility, authority, or institutional-network diagrams, model each edge before drawing it. Use a neutral relationship table such as:
+
+`主体甲｜关系或行为｜主体乙｜生效事件／有效期间／终止事件`
+
+- Treat a **subject** broadly. It may be an individual, legal person, unincorporated organization, public authority, court, tribunal, regulator, fund, trust, estate, platform, office, or another legally or procedurally relevant actor. Do not assume that every subject is a company.
+- Require every directional edge to identify its source subject, relationship or act, destination subject, and temporal scope when the relationship changes over time.
+- Do not let a relationship arrow originate in empty space, terminate in a module heading, or rely on nearby placement to imply who acts for, controls, represents, holds for, refers to, or transfers something to whom.
+- When one subject appears in several historical states, prefer one node with an alias or state timeline. If separate state nodes are clearer, label the link explicitly as the same subject's continuation, renaming, succession, reorganization, or other supported state change.
+- Keep reusable examples anonymized and generic. Do not carry party names, case numbers, account details, or other matter-specific identifiers into skill instructions or templates.
+
 For detailed source and deadline handling, read [references/legal-source-and-time.md](references/legal-source-and-time.md).
 
 ## Choose the smallest useful diagram set
@@ -139,7 +149,7 @@ Recommended category mapping:
 - default, refusal, sanction, or referral risk: muted red;
 - common intake and neutral notes: gray.
 
-Start from [assets/editable-legal-flow-template.svg](assets/editable-legal-flow-template.svg) when it materially saves work. Read [references/editable-svg-standard.md](references/editable-svg-standard.md) before creating or substantially revising an SVG.
+Start from [assets/editable-legal-flow-template.svg](assets/editable-legal-flow-template.svg) when it materially saves work. Before creating or substantially revising an SVG, read both [references/editable-svg-standard.md](references/editable-svg-standard.md) and [references/connector-integrity.md](references/connector-integrity.md).
 
 ## Verify before delivery
 
@@ -148,13 +158,26 @@ Start from [assets/editable-legal-flow-template.svg](assets/editable-legal-flow-
 3. Check that every deadline shows its triggering event and unit.
 4. Check every condition, exception, prohibition, consequence, remedy, and procedure-conversion path for a visible destination.
 5. Check branches for missing outcomes, especially dismissal, default, tolling, appeal, remand, settlement, referral, and enforcement.
-6. For a large complete-process project, first produce one representative stage at the chosen detail profile and obtain the user's confirmation before batch drawing, unless the user explicitly waives the checkpoint.
-7. Validate SVG structure with:
+6. For every relationship arrow, check the source subject, relationship or act, destination subject, and temporal scope. Confirm that both endpoints attach to the intended node boundaries and that the label cannot be read as describing another nearby edge.
+7. Check layout geometry separately from legal semantics:
+   - peer nodes must not overlap or share borders unless the design explicitly encodes that relationship;
+   - scope or module boundaries must not cross nodes, text, or arrow labels;
+   - text must remain inside its node with visible padding and must not collide with connectors;
+   - use approximately 32 px between peer nodes and 24 px between a module boundary and its contents as starting targets when no other layout system is defined, then adjust for the canvas and text density while preserving clear separation;
+   - for programmatically generated or dense SVGs, calculate or inspect text and shape bounding boxes and test unintended intersections when tooling permits.
+8. For every arrowed SVG connector, declare stable source and target metadata (`data-from`, `data-to`, `data-from-side`, `data-to-side`). Calculate endpoints from node boundaries rather than typing approximate coordinates. The final segment must approach the declared target from outside the node.
+9. Run connector and structural validation before the first render, not only before delivery:
 
    `python3 scripts/validate_svg.py <file-or-directory>`
 
-8. Render each SVG to a raster preview and inspect the full image for clipping, overflow, connector collisions, unreadable citations, and inconsistent spacing.
-9. Keep the SVG as the editable source. A PNG is only a preview.
-10. Deliver each file with a descriptive name and state the governing source version or effective date.
+   Treat any missing connector contract, endpoint detached from its declared node, wrong approach direction, connector crossing an unrelated node, or module boundary crossing a node as a hard failure. Fix it before rendering.
+10. Render each SVG to a raster preview and inspect the full image, a readable 100% view, and enlarged crops of dense regions for clipping, overflow, node or boundary overlap, connector collisions, ambiguous arrow direction, unreadable citations, and inconsistent spacing.
+11. Always create enlarged connector crops when a node has multiple incident edges, a route crosses lanes or modules, a polyline has three or more segments, solid and dashed lines meet, or edge labels are close together.
+12. Check semantic legibility even after automated validation passes. A geometrically valid connector still fails if it passes through another node, appears to originate from a nearby node, approaches the target tangentially or outward, shares a segment that implies a false merged relationship, or places its label closer to another edge.
+13. After every meaningful geometry, text, or connector change, run validation again, render again, and inspect the changed visual. Do not reuse an earlier inspection result for a revised file.
+14. Treat structural validation, connector-integrity validation, legal-semantic validation, and visual-collision inspection as separate gates. Passing one does not establish that the others passed.
+15. For a large complete-process project, first produce one representative stage at the chosen detail profile and obtain the user's confirmation before batch drawing, unless the user explicitly waives the checkpoint.
+16. Keep the SVG as the editable source. A PNG is only a preview.
+17. Deliver each file with a descriptive name and state the governing source version or effective date. Record the number of nodes and connectors, validation result, visual corrections made, and any remaining limitation.
 
 Do not claim completeness if a source was unavailable, a deadline remains disputed, or the visual intentionally omits a track. State the limitation in the diagram or handoff.

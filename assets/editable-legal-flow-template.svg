@@ -18,9 +18,12 @@
   <text class="heading" x="320" y="165" text-anchor="middle">第一审／主要程序</text>
   <text class="heading" x="880" y="165" text-anchor="middle">复审／上诉程序</text>
 
-  <path class="connector" d="M320 320 V385"/>
-  <path class="connector" d="M520 480 H680"/>
-  <path class="connector" d="M880 555 V620"/>
+  <path id="edge-main-step-1-main-step-2" class="connector" d="M320 320 V385"
+        data-from="main-step-1" data-to="main-step-2" data-from-side="bottom" data-to-side="top"/>
+  <path id="edge-main-step-2-review-step-1" class="connector" d="M520 480 H680"
+        data-from="main-step-2" data-to="review-step-1" data-from-side="right" data-to-side="left"/>
+  <path id="edge-review-step-1-terminal-step" class="connector" d="M880 555 V620"
+        data-from="review-step-1" data-to="terminal-step" data-from-side="bottom" data-to-side="top"/>
 
   <g id="main-step-1">
     <rect class="stage" x="120" y="205" width="400" height="115" rx="7"/>

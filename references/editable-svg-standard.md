@@ -31,9 +31,14 @@ Keep the source readable. One legal step should normally be one `<g id="...">` c
 - Use consistent node widths within a lane.
 - Keep vertical gaps sufficient for arrowheads and labels.
 - Attach arrows to node boundaries, not through node centers.
+- Give every arrowed connector a stable ID and declare `data-from`, `data-to`, `data-from-side`, and `data-to-side`. The declared node IDs must exist.
+- Calculate connector endpoints from node geometry. Do not type a coordinate merely because it looks close to a node.
+- Route the final segment from outside the target toward the declared side. A path that lands on the right boundary while still pointing right is invalid even though its endpoint touches the rectangle.
 - Put conditional labels near the first segment leaving a decision diamond.
 - Apply the line-semantics rules below; do not dash a connector merely because it is outside the main path.
 - Avoid connector crossings. If unavoidable, use lanes, bridge spacing, or split the diagram.
+
+Read [connector-integrity.md](connector-integrity.md) for the connector data contract, pre-render checks, collision rules, and enlarged-crop triggers.
 
 ## Line semantics
 
@@ -76,7 +81,7 @@ Use different lane headings or text labels in addition to color. Maintain suffic
 
 ## Rendering checks
 
-Inspect a rendered preview at full-page scale and at a readable zoom. Check:
+Run `scripts/validate_svg.py` before the first render and after every connector or geometry revision. Then inspect a rendered preview at full-page scale, at a readable zoom, and in enlarged connector crops. Check:
 
 - text overflow or clipping;
 - missing glyphs, especially `§`, Chinese punctuation, and en dashes;
@@ -86,3 +91,5 @@ Inspect a rendered preview at full-page scale and at a readable zoom. Check:
 - citations that are too small to read;
 - content below the viewBox;
 - accidental rasterization or text converted to paths.
+
+Do not treat a clean full-page thumbnail as proof that connectors are correct. At full-page scale, a small detached endpoint or wrong approach direction can be visually subtle.
