@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="950" viewBox="0 0 1400 950" role="img" aria-labelledby="title desc">
+  <title id="title">Editable legal relationship and fund-flow template</title>
+  <desc id="desc">A fictional actor-to-actor relationship template demonstrating straight, curved, branched, and conditional connectors with editable text.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth"><path d="M0 0 L12 6 L0 12 Z" fill="#55606D"/></marker>
+    <style>
+      .page{fill:#F7F6F2}.title{font:700 32px 'Noto Sans SC','PingFang SC',sans-serif;fill:#1F2933}.subtitle{font:400 15px 'Noto Sans SC','PingFang SC',sans-serif;fill:#52606D}.node-title{font:700 21px 'Noto Sans SC','PingFang SC',sans-serif;fill:#1F2933}.amount{font:700 25px 'IBM Plex Mono','SFMono-Regular',monospace;fill:#B45309}.body{font:400 16px 'Noto Sans SC','PingFang SC',sans-serif;fill:#37474F}.note{font:400 13px 'Noto Sans SC','PingFang SC',sans-serif;fill:#64748B}.disputed{font:700 18px 'Noto Sans SC','PingFang SC',sans-serif;fill:#B91C1C}.edge-label{font:600 14px 'Noto Sans SC','PingFang SC',sans-serif;fill:#475563}.neutral{fill:#ECEFF1;stroke:#84909A;stroke-width:1.6}.stage{fill:#E7EEF6;stroke:#6783A2;stroke-width:1.6}.terminal{fill:#F4ECDC;stroke:#A48755;stroke-width:1.6}.risk{fill:#F3E5E2;stroke:#A66F67;stroke-width:1.6}.review{fill:#EEE9F5;stroke:#86729F;stroke-width:1.6}.connector{fill:none;stroke:#55606D;stroke-width:2.4;marker-end:url(#arrow)}.conditional{fill:none;stroke:#9A625D;stroke-width:2.2;stroke-dasharray:9 7;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect class="page" width="1400" height="950"/>
+  <text class="title" x="700" y="52" text-anchor="middle">案涉款项与合同归属关系｜去敏模板</text>
+  <text class="subtitle" x="700" y="82" text-anchor="middle">所有主体、金额和依据均为占位示例，不对应真实案件</text>
+
+  <path id="edge-payer-recipient" class="connector" d="M390 430 H560" data-from="payer" data-to="direct-recipient" data-from-side="right" data-to-side="left"/>
+  <path id="edge-recipient-attributed" class="connector" d="M860 390 C940 390 950 265 1040 265" data-from="direct-recipient" data-to="attributed-recipient" data-from-side="right" data-to-side="left"/>
+  <path id="edge-recipient-disputed" class="connector" d="M860 470 C940 470 950 605 1040 605" data-from="direct-recipient" data-to="disputed-recipient" data-from-side="right" data-to-side="left"/>
+  <path id="edge-agreement-recipient" class="conditional" d="M490 800 C620 800 710 650 710 510" data-from="agreement" data-to="direct-recipient" data-from-side="right" data-to-side="bottom"/>
+
+  <text class="edge-label" x="475" y="414" text-anchor="middle">实际转账</text>
+  <text class="edge-label" x="930" y="315" text-anchor="middle">确认计入</text>
+  <text class="edge-label" x="930" y="535" text-anchor="middle">归属待认定</text>
+  <text class="edge-label" x="625" y="710" text-anchor="middle">合同追认／主张关系</text>
+
+  <g id="payer"><rect class="neutral" x="90" y="350" width="300" height="160" rx="10"/><text class="node-title" x="120" y="388">主体甲｜付款方</text><text class="amount" x="120" y="428">示例支付 680,000元</text><text class="body" x="120" y="462">依据付款凭证确认实际流出</text><text class="note" x="120" y="490">（示例依据：付款凭证A）</text></g>
+  <g id="direct-recipient"><rect class="stage" x="560" y="350" width="300" height="160" rx="10"/><text class="node-title" x="590" y="388">主体乙｜直接收款方</text><text class="amount" x="590" y="428">确认收款 620,000元</text><text class="body" x="590" y="462">另有款项流向其他主体</text><text class="note" x="590" y="490">（示例依据：收款记录B）</text></g>
+  <g id="attributed-recipient"><rect class="terminal" x="1040" y="190" width="290" height="150" rx="10"/><text class="node-title" x="1070" y="228">主体丙｜经确认归属</text><text class="amount" x="1070" y="268">55,000元</text><text class="body" x="1070" y="300">补充协议确认计入合同费用</text><text class="note" x="1070" y="324">（示例依据：补充协议C）</text></g>
+  <g id="disputed-recipient"><rect class="risk" x="1040" y="530" width="290" height="150" rx="10"/><text class="node-title" x="1070" y="568">主体丁｜争议收款</text><text class="amount" x="1070" y="608">15,000元</text><text class="disputed" x="1070" y="640">收款归属存在争议</text><text class="note" x="1070" y="664">（示例材料；尚无裁判认定）</text></g>
+  <g id="agreement"><rect class="review" x="90" y="730" width="400" height="140" rx="10"/><text class="node-title" x="120" y="770">补充协议｜合同追认</text><text class="body" x="120" y="808">仅确认其中55,000元计入合同费用</text><text class="note" x="120" y="840">虚线表示条件、主张或待认定关系</text></g>
+
+  <text class="subtitle" x="90" y="920">直线＝同轴、连续关系｜曲线＝跨主体或分叉流向｜虚线＝条件、争议或合同追认；几何形状本身不改变法律含义</text>
+</svg>

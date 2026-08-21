@@ -34,6 +34,14 @@ class Rect:
         return self.y + self.height
 
 
+@dataclass(frozen=True)
+class PathGeometry:
+    points: list[tuple[float, float]]
+    start_delta: tuple[float, float]
+    end_delta: tuple[float, float]
+    curved: bool
+
+
 def svg_files(target: Path) -> list[Path]:
     if target.is_file():
         return [target]
@@ -70,7 +78,27 @@ def node_rectangles(root: ET.Element) -> tuple[dict[str, Rect], list[str]]:
     return nodes, warnings
 
 
-def parse_orthogonal_path(path_data: str) -> list[tuple[float, float]]:
+def cubic_point(
+    start: tuple[float, float], control_1: tuple[float, float],
+    control_2: tuple[float, float], end: tuple[float, float], t: float
+) -> tuple[float, float]:
+    inverse = 1.0 - t
+    x = (
+        inverse ** 3 * start[0]
+        + 3 * inverse ** 2 * t * control_1[0]
+        + 3 * inverse * t ** 2 * control_2[0]
+        + t ** 3 * end[0]
+    )
+    y = (
+        inverse ** 3 * start[1]
+        + 3 * inverse ** 2 * t * control_1[1]
+        + 3 * inverse * t ** 2 * control_2[1]
+        + t ** 3 * end[1]
+    )
+    return x, y
+
+
+def parse_connector_path(path_data: str, curve_samples: int = 32) -> PathGeometry:
     tokens = PATH_TOKEN.findall(path_data.replace(",", " "))
     if not tokens:
         raise ValueError("empty path data")
@@ -79,7 +107,50 @@ def parse_orthogonal_path(path_data: str) -> list[tuple[float, float]]:
     current = (0.0, 0.0)
     subpath_start = current
     command: str | None = None
+    previous_cubic_control: tuple[float, float] | None = None
+    start_delta: tuple[float, float] | None = None
+    end_delta: tuple[float, float] | None = None
+    curved = False
     i = 0
+
+    def require_numbers(count: int) -> None:
+        if i + count > len(tokens) or any(token.isalpha() for token in tokens[i:i + count]):
+            raise ValueError(f"command {command} requires {count} numeric values")
+
+    def add_line(end: tuple[float, float]) -> None:
+        nonlocal current, start_delta, end_delta, previous_cubic_control
+        delta = movement(current, end)
+        if delta == (0.0, 0.0):
+            raise ValueError("zero-length connector segment")
+        if start_delta is None:
+            start_delta = delta
+        end_delta = delta
+        points.append(end)
+        current = end
+        previous_cubic_control = None
+
+    def add_cubic(
+        control_1: tuple[float, float], control_2: tuple[float, float], end: tuple[float, float]
+    ) -> None:
+        nonlocal current, start_delta, end_delta, previous_cubic_control, curved
+        sampled = [cubic_point(current, control_1, control_2, end, step / curve_samples)
+                   for step in range(1, curve_samples + 1)]
+        first_tangent = movement(current, control_1)
+        if first_tangent == (0.0, 0.0):
+            first_tangent = movement(current, sampled[0])
+        final_tangent = movement(control_2, end)
+        if final_tangent == (0.0, 0.0):
+            final_tangent = movement(sampled[-2], end)
+        if first_tangent == (0.0, 0.0) or final_tangent == (0.0, 0.0):
+            raise ValueError("cubic connector has an undefined endpoint tangent")
+        if start_delta is None:
+            start_delta = first_tangent
+        end_delta = final_tangent
+        points.extend(sampled)
+        current = end
+        previous_cubic_control = control_2
+        curved = True
+
     while i < len(tokens):
         token = tokens[i]
         if token.isalpha():
@@ -87,40 +158,59 @@ def parse_orthogonal_path(path_data: str) -> list[tuple[float, float]]:
             i += 1
             if command.islower():
                 raise ValueError(f"relative command {command} is not supported")
-            if command not in {"M", "L", "H", "V", "Z"}:
+            if command not in {"M", "L", "H", "V", "C", "S", "Z"}:
                 raise ValueError(f"path command {command} is not supported")
             if command == "Z":
-                current = subpath_start
-                points.append(current)
+                add_line(subpath_start)
                 command = None
             continue
         if command is None:
             raise ValueError("number without an active path command")
 
         if command in {"M", "L"}:
-            if i + 1 >= len(tokens) or tokens[i + 1].isalpha():
-                raise ValueError(f"command {command} requires an x/y pair")
-            current = (float(tokens[i]), float(tokens[i + 1]))
-            points.append(current)
+            require_numbers(2)
+            end = (float(tokens[i]), float(tokens[i + 1]))
             if command == "M":
+                current = end
                 subpath_start = current
+                points.append(current)
                 command = "L"
+                previous_cubic_control = None
+            else:
+                add_line(end)
             i += 2
         elif command == "H":
-            current = (float(tokens[i]), current[1])
-            points.append(current)
+            require_numbers(1)
+            add_line((float(tokens[i]), current[1]))
             i += 1
         elif command == "V":
-            current = (current[0], float(tokens[i]))
-            points.append(current)
+            require_numbers(1)
+            add_line((current[0], float(tokens[i])))
             i += 1
+        elif command == "C":
+            require_numbers(6)
+            add_cubic(
+                (float(tokens[i]), float(tokens[i + 1])),
+                (float(tokens[i + 2]), float(tokens[i + 3])),
+                (float(tokens[i + 4]), float(tokens[i + 5])),
+            )
+            i += 6
+        elif command == "S":
+            require_numbers(4)
+            control_1 = current if previous_cubic_control is None else (
+                2 * current[0] - previous_cubic_control[0],
+                2 * current[1] - previous_cubic_control[1],
+            )
+            add_cubic(
+                control_1,
+                (float(tokens[i]), float(tokens[i + 1])),
+                (float(tokens[i + 2]), float(tokens[i + 3])),
+            )
+            i += 4
 
-    if len(points) < 2:
+    if len(points) < 2 or start_delta is None or end_delta is None:
         raise ValueError("connector path must contain at least two points")
-    for start, end in zip(points, points[1:]):
-        if start[0] != end[0] and start[1] != end[1]:
-            raise ValueError("diagonal connector segment is not supported")
-    return points
+    return PathGeometry(points, start_delta, end_delta, curved)
 
 
 def on_side(point: tuple[float, float], rect: Rect, side: str, tol: float = TOLERANCE) -> bool:
@@ -140,21 +230,23 @@ def movement(start: tuple[float, float], end: tuple[float, float]) -> tuple[floa
 
 def departs_outward(delta: tuple[float, float], side: str) -> bool:
     dx, dy = delta
+    axis_tolerance = 1e-6
     return {
-        "top": dy < 0 and dx == 0,
-        "right": dx > 0 and dy == 0,
-        "bottom": dy > 0 and dx == 0,
-        "left": dx < 0 and dy == 0,
+        "top": dy < 0 and abs(dx) <= axis_tolerance,
+        "right": dx > 0 and abs(dy) <= axis_tolerance,
+        "bottom": dy > 0 and abs(dx) <= axis_tolerance,
+        "left": dx < 0 and abs(dy) <= axis_tolerance,
     }[side]
 
 
 def approaches_inward(delta: tuple[float, float], side: str) -> bool:
     dx, dy = delta
+    axis_tolerance = 1e-6
     return {
-        "top": dy > 0 and dx == 0,
-        "right": dx < 0 and dy == 0,
-        "bottom": dy < 0 and dx == 0,
-        "left": dx > 0 and dy == 0,
+        "top": dy > 0 and abs(dx) <= axis_tolerance,
+        "right": dx < 0 and abs(dy) <= axis_tolerance,
+        "bottom": dy < 0 and abs(dx) <= axis_tolerance,
+        "left": dx > 0 and abs(dy) <= axis_tolerance,
     }[side]
 
 
@@ -163,13 +255,25 @@ def segment_crosses_interior(
 ) -> bool:
     x1, y1 = start
     x2, y2 = end
-    if x1 == x2:
-        low, high = sorted((y1, y2))
-        return rect.x + tol < x1 < rect.right - tol and max(low, rect.y + tol) < min(high, rect.bottom - tol)
-    if y1 == y2:
-        low, high = sorted((x1, x2))
-        return rect.y + tol < y1 < rect.bottom - tol and max(low, rect.x + tol) < min(high, rect.right - tol)
-    return True
+    left, right = rect.x + tol, rect.right - tol
+    top, bottom = rect.y + tol, rect.bottom - tol
+    if left >= right or top >= bottom:
+        return False
+    dx, dy = x2 - x1, y2 - y1
+    lower, upper = 0.0, 1.0
+    for p, q in ((-dx, x1 - left), (dx, right - x1), (-dy, y1 - top), (dy, bottom - y1)):
+        if abs(p) <= 1e-12:
+            if q < 0:
+                return False
+            continue
+        ratio = q / p
+        if p < 0:
+            lower = max(lower, ratio)
+        else:
+            upper = min(upper, ratio)
+        if lower > upper:
+            return False
+    return upper > 0.0 and lower < 1.0 and lower <= upper
 
 
 def boundary_crosses_node(boundary: Rect, node: Rect) -> bool:
@@ -187,7 +291,14 @@ def is_arrowed_path(path: ET.Element) -> bool:
     return bool(path.get("marker-end") or classes.intersection({"connector", "conditional"}))
 
 
-def validate_connectors(root: ET.Element, nodes: dict[str, Rect]) -> list[str]:
+def inside_canvas(point: tuple[float, float], canvas: Rect, tol: float = TOLERANCE) -> bool:
+    return (
+        canvas.x - tol <= point[0] <= canvas.right + tol
+        and canvas.y - tol <= point[1] <= canvas.bottom + tol
+    )
+
+
+def validate_connectors(root: ET.Element, nodes: dict[str, Rect], canvas: Rect | None) -> list[str]:
     errors: list[str] = []
     for index, path in enumerate(root.iter(f"{SVG_NS}path"), start=1):
         arrowed = is_arrowed_path(path)
@@ -218,11 +329,12 @@ def validate_connectors(root: ET.Element, nodes: dict[str, Rect]) -> list[str]:
             continue
 
         try:
-            points = parse_orthogonal_path(path.get("d") or "")
+            geometry = parse_connector_path(path.get("d") or "")
         except ValueError as exc:
             errors.append(f"{edge_id}: {exc}")
             continue
 
+        points = geometry.points
         source_rect = nodes[source_id]
         target_rect = nodes[target_id]
         if not on_side(points[0], source_rect, source_side):
@@ -230,12 +342,13 @@ def validate_connectors(root: ET.Element, nodes: dict[str, Rect]) -> list[str]:
         if not on_side(points[-1], target_rect, target_side):
             errors.append(f"{edge_id}: end point is detached from {target_id}.{target_side}")
 
-        first_delta = movement(points[0], points[1])
-        last_delta = movement(points[-2], points[-1])
-        if not departs_outward(first_delta, source_side):
+        if not departs_outward(geometry.start_delta, source_side):
             errors.append(f"{edge_id}: first segment does not leave {source_id}.{source_side} outward")
-        if not approaches_inward(last_delta, target_side):
+        if not approaches_inward(geometry.end_delta, target_side):
             errors.append(f"{edge_id}: final segment does not approach {target_id}.{target_side} inward")
+
+        if canvas is not None and any(not inside_canvas(point, canvas) for point in points):
+            errors.append(f"{edge_id}: connector extends outside the SVG viewBox")
 
         for node_id, rect in nodes.items():
             if node_id in {source_id, target_id}:
@@ -276,8 +389,18 @@ def validate(path: Path) -> tuple[list[str], list[str]]:
 
     if root.tag != f"{SVG_NS}svg":
         errors.append("root element is not an SVG element in the SVG namespace")
-    if not root.get("viewBox"):
+    canvas: Rect | None = None
+    raw_viewbox = root.get("viewBox")
+    if not raw_viewbox:
         errors.append("missing viewBox")
+    else:
+        try:
+            values = [float(value) for value in raw_viewbox.replace(",", " ").split()]
+            if len(values) != 4 or values[2] <= 0 or values[3] <= 0:
+                raise ValueError
+            canvas = Rect(*values)
+        except ValueError:
+            errors.append(f"invalid viewBox: {raw_viewbox!r}")
 
     title = root.find(f"{SVG_NS}title")
     desc = root.find(f"{SVG_NS}desc")
@@ -315,7 +438,7 @@ def validate(path: Path) -> tuple[list[str], list[str]]:
 
     nodes, node_warnings = node_rectangles(root)
     warnings.extend(node_warnings)
-    errors.extend(validate_connectors(root, nodes))
+    errors.extend(validate_connectors(root, nodes, canvas))
     errors.extend(validate_boundaries(root, nodes))
     return errors, warnings
 

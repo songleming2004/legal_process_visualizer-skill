@@ -39,6 +39,33 @@ Touching a boundary is insufficient when the arrowhead points outward or arrives
 
 Use an approach point outside the target, then make the final short segment perpendicular to the boundary. Apply the same principle at the source so a route does not appear to originate from another nearby node.
 
+## Cubic Bézier connectors
+
+Use cubic curves for non-aligned actor-to-actor relationships, cross-lane transfers, one-to-many branches, fund or evidence flows, and contractual attribution when a curve creates clearer separation than an orthogonal route. Do not curve an aligned chronological sequence without a layout reason.
+
+For a route from the right side of a source node to the left side of a target node, use:
+
+```svg
+<path
+  id="edge-payer-recipient"
+  class="connector"
+  data-from="payer"
+  data-to="recipient"
+  data-from-side="right"
+  data-to-side="left"
+  d="M 520 300 C 610 300, 650 470, 740 470"/>
+```
+
+For endpoints `(x1, y1)` and `(x2, y2)`, a stable horizontal-side starting pattern is:
+
+`M x1 y1 C x1+k y1, x2-k y2, x2 y2`
+
+Start with `k` at 30%–45% of the horizontal distance, normally clamped to approximately 40–240 px, then adjust all related routes as a family. The first control point shares the source y-coordinate and the second shares the target y-coordinate; this makes the curve leave and enter those vertical boundaries perpendicularly.
+
+For top or bottom sides, apply the same rule on the y-axis. Mixed-side curves must keep the first control point on the outward normal from the source and the final control point on the outward normal from the target. Smooth `S` segments may continue an existing cubic route, but must preserve an unambiguous final tangent at the declared target.
+
+Keep a consistent control-distance rule across parallel or sibling curves. Increase separation or introduce an explicit relationship hub when curves overlap, cross, or appear to merge. Geometry still carries no independent legal meaning: use solid or dashed style and an edge label to state the relationship.
+
 ## Pre-render validation
 
 Before the first render and after every geometry or connector revision, run:
@@ -58,7 +85,9 @@ Treat these as hard failures:
 - module or scope boundary crosses a node;
 - unsupported path geometry prevents reliable endpoint validation.
 
-The validator handles ordinary untransformed SVG nodes whose primary geometry is a `<rect>` and orthogonal `M`, `L`, `H`, and `V` connector paths. When using transforms, curves, polygons, or diamonds, either extend the deterministic validator or perform and record an equivalent bounding-box check. Do not silently downgrade an unvalidated route to “looks correct.”
+The validator handles ordinary untransformed SVG nodes whose primary geometry is a `<rect>`, together with absolute `M`, `L`, `H`, `V`, `C`, and `S` connector paths. It samples cubic curves to check unrelated-node crossings and uses control-point tangents to check source departure and target approach. When using transforms, relative commands, arcs, quadratic curves, polygons, or diamonds, either extend the deterministic validator or perform and record an equivalent bounding-box check. Do not silently downgrade an unvalidated route to “looks correct.”
+
+Rendered text boundaries remain a separate visual gate. Font fallback and actual glyph shaping cannot be established reliably by the static XML validator, so render the latest SVG in the target browser or editor and inspect every node and edge label for overflow or collision.
 
 ## Semantic legibility after validation
 
@@ -81,6 +110,7 @@ Create and inspect an enlarged crop for every connector cluster where:
 - a node has two or more incoming or outgoing edges;
 - a route crosses a lane or module;
 - a polyline has three or more segments;
+- a cubic or smooth cubic connector is used;
 - solid and dashed lines meet or cross;
 - labels sit near other paths;
 - a path runs behind any node;

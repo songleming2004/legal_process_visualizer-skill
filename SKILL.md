@@ -140,6 +140,17 @@ When editable SVG is requested:
 - pair color with headings or lane labels so color is not the only encoding;
 - preserve a formal legal-document tone even when using several category colors.
 
+### Choose connector geometry
+
+Choose geometry according to the relationship rather than applying one connector shape to the whole project:
+
+- Use straight or orthogonal connectors for aligned, chronological, or strictly sequential steps.
+- Prefer cubic Bézier connectors when non-aligned transfers between actors, cross-lane relationships, one-to-many branches, fund flows, evidence flows, or contractual-attribution relationships become clearer through separated curves.
+- Use curves to reduce crossings and distinguish routes, never merely as decoration.
+- Connector geometry does not encode legal meaning. Continue to encode ordinary, conditional, disputed, explanatory, and scope relationships through line style and explicit labels.
+- Curved connectors must leave the declared source side and enter the declared target side perpendicularly. Keep curvature and spacing consistent within the same diagram.
+- If curves would create tighter label collisions or ambiguous shared routes, use orthogonal connectors, add a relationship hub, or split the diagram instead.
+
 Recommended category mapping:
 
 - ordinary first-instance steps: muted blue;
@@ -149,7 +160,7 @@ Recommended category mapping:
 - default, refusal, sanction, or referral risk: muted red;
 - common intake and neutral notes: gray.
 
-Start from [assets/editable-legal-flow-template.svg](assets/editable-legal-flow-template.svg) when it materially saves work. Before creating or substantially revising an SVG, read both [references/editable-svg-standard.md](references/editable-svg-standard.md) and [references/connector-integrity.md](references/connector-integrity.md).
+Start from [assets/editable-legal-flow-template.svg](assets/editable-legal-flow-template.svg) for procedural sequences. Use [assets/editable-legal-relationship-template.svg](assets/editable-legal-relationship-template.svg) for fund flows, transfers, attribution, ownership, or other actor-to-actor relationships where curved routes improve separation. Before creating or substantially revising an SVG, read both [references/editable-svg-standard.md](references/editable-svg-standard.md) and [references/connector-integrity.md](references/connector-integrity.md).
 
 ## Verify before delivery
 
