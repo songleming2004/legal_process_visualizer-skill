@@ -1,6 +1,6 @@
 ---
 name: legal-process-visualizer
-description: Research, structure, and create or revise editable legal-process visualizations—including litigation, arbitration, administrative, regulatory, self-regulatory, appellate, enforcement, evidence, and deadline flows—when the user asks for a procedural flowchart, litigation timeline, decision tree, source-cited diagram, or editable SVG. Do not use for ordinary legal prose without a visual deliverable.
+description: Research, structure, and create or revise editable legal-process visualizations—including litigation, arbitration, administrative, regulatory, self-regulatory, appellate, enforcement, evidence, deadline, and temporal-span flows—when the user asks for a procedural flowchart, litigation timeline, decision tree, source-cited diagram, or editable SVG. Includes periods, factual-state spans, interruption, suspension, tolling, legal transitions, and typographic braces; do not use for ordinary legal prose without a visual deliverable.
 ---
 
 # Legal Process Visualizer
@@ -64,6 +64,18 @@ For relationship, ownership, responsibility, authority, or institutional-network
 - Keep reusable examples anonymized and generic. Do not carry party names, case numbers, account details, or other matter-specific identifiers into skill instructions or templates.
 
 For detailed source and deadline handling, read [references/legal-source-and-time.md](references/legal-source-and-time.md).
+
+### Model temporal spans before choosing their shape
+
+Treat a date, a period, a factual state, a calculated interval, and a procedural phase as different temporal objects. Do not choose a brace or band solely from the object's legal label. Choose according to what the reader must compare:
+
+- use a point or milestone for an accrual, filing, release, effective date, or expiry;
+- prefer a typographic brace when exact start/end alignment or comparison with another interval is the main analytical task, including a continuous factual state such as custody when its overlap with a limitation period matters;
+- prefer a state band when continuous presence across several independent events matters more than its endpoint comparison;
+- use nested or coordinated braces for a whole span and a legally relevant subspan when both sets of endpoints matter;
+- keep statutory periods, court calculations, factual states, and estimates visibly distinct through labels, color, and authority rather than assuming that shape alone communicates their legal nature.
+
+Before drawing a timeline with braces, nested periods, suspension, tolling, or legal-transition intervals, read [references/temporal-span-and-brace-grammar.md](references/temporal-span-and-brace-grammar.md).
 
 ## Choose the smallest useful diagram set
 
@@ -178,11 +190,14 @@ Recommended category mapping:
 
 Start from [assets/editable-legal-flow-template.svg](assets/editable-legal-flow-template.svg) for procedural sequences. Use [assets/editable-legal-relationship-template.svg](assets/editable-legal-relationship-template.svg) for fund flows, transfers, attribution, ownership, or other actor-to-actor relationships where curved routes improve separation. Use [assets/editable-single-arrow-convergence-template.svg](assets/editable-single-arrow-convergence-template.svg) when several sources must visibly converge on one target. Before creating or substantially revising an SVG, read both [references/editable-svg-standard.md](references/editable-svg-standard.md) and [references/connector-integrity.md](references/connector-integrity.md).
 
+For a horizontal typographic brace, use the silhouette in [assets/typographic-brace-reference.svg](assets/typographic-brace-reference.svg) as the shape reference and generate a length-preserving path with `scripts/generate_horizontal_brace.py`. Do not substitute a stroked line with rounded ends and a V-shaped notch when the requested style is a font-like `{ }` brace.
+
 ## Verify before delivery
 
 1. Reconcile every node against the governing source.
 2. Reconcile the final node set against the coverage manifest. Every omission must be intentional and explained.
 3. Check that every deadline shows its triggering event and unit.
+   - For every temporal brace, separately check its start anchor, end anchor, visible label, legal/factual nature, source, and projection to the time axis.
 4. Check every condition, exception, prohibition, consequence, remedy, and procedure-conversion path for a visible destination.
 5. Check branches for missing outcomes, especially dismissal, default, tolling, appeal, remand, settlement, referral, and enforcement.
 6. For every relationship arrow, check the source subject, relationship or act, destination subject, and temporal scope. Confirm that both endpoints attach to the intended node boundaries and that the label cannot be read as describing another nearby edge.

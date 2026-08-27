@@ -13,6 +13,7 @@ Legal Process Visualizer is a Codex skill for work that is difficult to understa
 - **Decision trees** showing how different facts or rulings lead to different procedural outcomes.
 - **Legal-relationship diagrams** showing ownership, control, agency, trust, transfer, responsibility, remedies, and changes over time.
 - **Deadline maps** connecting each time limit to the event that starts it.
+- **Temporal-span maps** distinguishing point events, statutory or court-calculated periods, continuous factual states, interruption, suspension, tolling, and legal-transition windows.
 - **Coordinated diagram sets** when one page would be too crowded—for example, a main proceeding, an appeal path, and a relationship map.
 - **Revisions of existing diagrams** to improve structure, citations, readability, or ambiguous arrows.
 
@@ -23,6 +24,7 @@ The usual output is an editable SVG, so names, wording, colors, positions, and c
 - It separates binding rules from judicial interpretation, practice observations, and explanatory notes.
 - It places the relevant provision or judgment paragraph next to the step it supports.
 - It distinguishes mandatory acts from discretionary choices and fixed deadlines from periods that the source does not define.
+- It can align exact period endpoints and show nested or overlapping intervals with font-like typographic braces while keeping legal periods, factual states, and estimates visibly distinct.
 - It makes exceptions, dismissal routes, remand, appeal, enforcement, and other easily missed outcomes visible.
 - It checks whether each arrow clearly connects the intended subjects, so a relationship is not left pointing into empty space or toward the wrong heading.
 - It can work from a limited source set, such as one judgment only, or from a broader set of governing materials when requested.
@@ -81,7 +83,17 @@ A reader can start from the decision below and follow the applicable branch to t
 
 A directional relationship map that identifies who held, controlled, transferred, or was required to restore each asset, including changes over time.
 
-### 5. Repair an existing legal diagram
+### 5. Compare overlapping legal and factual periods
+
+**Request**
+
+> Create an editable timeline showing the original limitation period, the restart date, a continuous factual obstacle, the legally relevant overlap, and the period recognized after a change in law. Put the governing authority inside each period card.
+
+**Result**
+
+A source-cited timeline that uses separate endpoints for each temporal object and typographic braces where exact alignment or interval comparison is the focal task. Brace height and visible weight remain independently adjustable without distorting the terminal heads, shoulders, or centered waist.
+
+### 6. Repair an existing legal diagram
 
 **Request**
 

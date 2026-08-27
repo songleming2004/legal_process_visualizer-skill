@@ -1,7 +1,7 @@
 interface:
   display_name: "法律程序与诉讼可视化"
-  short_description: "将法律程序、诉讼期限和条款依据制作成可编辑流程图"
+  short_description: "将法律程序、诉讼期限、期间重叠和条款依据制作成可编辑图"
   brand_color: "#49687E"
-  default_prompt: "Use $legal-process-visualizer to turn this legal procedure into an editable, source-cited SVG flowchart."
+  default_prompt: "Use $legal-process-visualizer to turn this legal procedure or deadline problem into an editable, source-cited SVG, using typographic temporal braces when endpoint comparison matters."
 policy:
   allow_implicit_invocation: true
