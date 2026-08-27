@@ -41,6 +41,12 @@ This fictional gallery illustrates three common outputs in one view:
 
 All names, dates, paragraph numbers, and authorities in the gallery are placeholders. They do not reproduce or refer to any real person, entity, dispute, judgment, or asset.
 
+### Temporal-span brace example
+
+![Editable typographic braces comparing a legal period, a factual state, and their legally relevant overlap](assets/readme-temporal-brace-example-en.svg)
+
+This fictional example shows when a typographic brace is more useful than a generic band: the reader needs to compare exact start and end points. The original limitation period, the continuous factual obstacle, and the legally relevant overlap each keep their own endpoint pair, label, and placeholder authority. Dashed guides project every material endpoint to the shared time axis, while color and wording distinguish legal rules, factual states, and court calculations.
+
 ## Examples
 
 ### 1. Turn one judgment into three coordinated diagrams

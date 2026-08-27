@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="820" viewBox="0 0 1400 820" role="img" aria-labelledby="title desc">
+  <title id="title">Typographic braces used to compare legal and factual periods</title>
+  <desc id="desc">A fictional timeline compares an original limitation period, a continuous factual obstacle, and the legally relevant overlap using three editable typographic braces.</desc>
+  <defs>
+    <style>
+      .page{fill:#F7F6F2}.panel{fill:#FCFCFA;stroke:#C5CBD1;stroke-width:1.5}.title{font:600 30px 'Inter','Helvetica Neue',Arial,sans-serif;fill:#1F2933}.subtitle{font:400 15px 'Inter','Helvetica Neue',Arial,sans-serif;fill:#52606D}.date{font:600 13px 'IBM Plex Mono','SFMono-Regular',monospace;fill:#34414C}.event{font:500 14px 'Inter','Helvetica Neue',Arial,sans-serif;fill:#37474F}.heading{font:600 16px 'Inter','Helvetica Neue',Arial,sans-serif;fill:#1F2933}.source{font:500 12px 'Inter','Helvetica Neue',Arial,sans-serif;fill:#52606D}.axis{stroke:#55606D;stroke-width:2}.tick{stroke:#55606D;stroke-width:2}.guide{stroke:#AAB4BD;stroke-width:1.5;stroke-dasharray:6 6}.legal{fill:#6783A2}.factual{fill:#86729F}.overlap{fill:#668B78}.legalCard{fill:#E7EEF6;stroke:#6783A2;stroke-width:1.5}.factualCard{fill:#EEE9F5;stroke:#86729F;stroke-width:1.5}.overlapCard{fill:#E5F0EA;stroke:#668B78;stroke-width:1.5}
+    </style>
+  </defs>
+  <rect class="page" width="1400" height="820"/>
+  <rect class="panel" x="55" y="45" width="1290" height="750" rx="14"/>
+  <text class="title" x="700" y="92" text-anchor="middle">When a brace is useful for a period</text>
+  <text class="subtitle" x="700" y="122" text-anchor="middle">Separate endpoint pairs make a legal window, a factual state, and their relevant overlap auditable</text>
+
+  <g id="timeline-axis">
+    <line class="axis" x1="145" y1="240" x2="1260" y2="240"/>
+    <line class="tick" x1="220" y1="231" x2="220" y2="249"/>
+    <line class="tick" x1="460" y1="231" x2="460" y2="249"/>
+    <line class="tick" x1="1030" y1="231" x2="1030" y2="249"/>
+    <line class="tick" x1="1210" y1="231" x2="1210" y2="249"/>
+    <text class="date" x="220" y="192" text-anchor="middle">20XX-01-01</text><text class="event" x="220" y="214" text-anchor="middle">claim accrues</text>
+    <text class="date" x="460" y="270" text-anchor="middle">20XX-04-01</text><text class="event" x="460" y="292" text-anchor="middle">obstacle begins</text>
+    <text class="date" x="1030" y="192" text-anchor="middle">20XX-12-31</text><text class="event" x="1030" y="214" text-anchor="middle">original expiry</text>
+    <text class="date" x="1210" y="270" text-anchor="middle">20XY-03-31</text><text class="event" x="1210" y="292" text-anchor="middle">obstacle ends</text>
+  </g>
+
+  <g id="endpoint-projections" aria-label="Dashed guides project each material endpoint to the time axis">
+    <path class="guide" d="M220 250 V320"/><path class="guide" d="M460 250 V630"/><path class="guide" d="M1030 250 V630"/><path class="guide" d="M1210 250 V475"/>
+  </g>
+
+  <g id="original-limitation-span" data-temporal-role="statutory-period" data-start="20XX-01-01" data-end="20XX-12-31" data-scale="day-level" data-authority="placeholder-statute-section-10">
+    <path class="legal" d="M 220 320 L 220 323.93 C 220 328.64 220 331.79 220.79 334.93 C 221.57 338.07 223.93 341.21 227.07 343.57 C 230.21 345.93 233.36 346.71 237.29 347.5 C 241.21 348.29 248.29 348.29 257.71 348.29 C 339.56 348.29 408.37 348.29 465.71 349.07 C 523.04 349.86 580.38 351.43 614.79 353.79 C 617.14 356.14 618.71 359.29 618.71 364 L 631.29 364 C 631.29 359.29 632.86 356.14 635.21 353.79 C 669.62 351.43 726.96 349.86 784.29 349.07 C 841.63 348.29 910.44 348.29 992.29 348.29 C 1001.71 348.29 1008.79 348.29 1012.71 347.5 C 1016.64 346.71 1019.79 345.93 1022.93 343.57 C 1026.07 341.21 1028.43 338.07 1029.21 334.93 C 1030 331.79 1030 328.64 1030 323.93 L 1030 320 L 1023.16 320 L 1023.16 323.15 C 1023.16 330.5 1021.88 334.7 1019.32 336.8 C 1015.48 339.94 1014.2 340.99 1010.36 340.99 L 990.71 340.99 C 818.7 340.99 704.02 342.57 635.21 344.92 C 630.5 347.28 627.36 351.99 625 356.71 C 622.64 351.99 619.5 347.28 614.79 344.92 C 545.98 342.57 431.3 340.99 259.29 340.99 L 239.64 340.99 C 235.8 340.99 234.52 339.94 230.68 336.8 C 228.12 334.7 226.84 330.5 226.84 323.15 L 226.84 320 Z"/>
+    <rect class="legalCard" x="455" y="378" width="340" height="66" rx="8"/><text class="heading" x="625" y="404" text-anchor="middle">Original limitation period · legal period</text><text class="source" x="625" y="428" text-anchor="middle">(Placeholder Statute § 10)</text>
+  </g>
+
+  <g id="factual-obstacle-span" data-temporal-role="continuous-factual-obstacle" data-start="20XX-04-01" data-end="20XY-03-31" data-scale="day-level" data-authority="placeholder-record-paragraph-18">
+    <path class="factual" d="M 460 475 L 460 478.93 C 460 483.64 460 486.79 460.79 489.93 C 461.57 493.07 463.93 496.21 467.07 498.57 C 470.21 500.93 473.36 501.71 477.29 502.5 C 481.21 503.29 488.29 503.29 497.71 503.29 C 572.79 503.29 635.79 503.29 688.29 504.07 C 740.79 504.86 793.29 506.43 824.79 508.79 C 827.14 511.14 828.71 514.29 828.71 519 L 841.29 519 C 841.29 514.29 842.86 511.14 845.21 508.79 C 876.71 506.43 929.21 504.86 981.71 504.07 C 1034.21 503.29 1097.21 503.29 1172.29 503.29 C 1181.71 503.29 1188.79 503.29 1192.71 502.5 C 1196.64 501.71 1199.79 500.93 1202.93 498.57 C 1206.07 496.21 1208.43 493.07 1209.21 489.93 C 1210 486.79 1210 483.64 1210 478.93 L 1210 475 L 1203.16 475 L 1203.16 478.15 C 1203.16 485.5 1201.88 489.7 1199.32 491.8 C 1195.48 494.94 1194.2 495.99 1190.36 495.99 L 1170.71 495.99 C 1013.21 495.99 908.21 497.57 845.21 499.92 C 840.5 502.28 837.36 506.99 835 511.71 C 832.64 506.99 829.5 502.28 824.79 499.92 C 761.79 497.57 656.79 495.99 499.29 495.99 L 479.64 495.99 C 475.8 495.99 474.52 494.94 470.68 491.8 C 468.12 489.7 466.84 485.5 466.84 478.15 L 466.84 475 Z"/>
+    <rect class="factualCard" x="665" y="533" width="340" height="66" rx="8"/><text class="heading" x="835" y="559" text-anchor="middle">Continuous obstacle · factual state</text><text class="source" x="835" y="583" text-anchor="middle">(Placeholder Record [18])</text>
+  </g>
+
+  <g id="relevant-overlap-span" data-temporal-role="court-recognized-overlap" data-start="20XX-04-01" data-end="20XX-12-31" data-scale="day-level" data-authority="placeholder-judgment-paragraph-24">
+    <path class="overlap" d="M 460 630 L 460 633.57 C 460 637.86 460 640.71 460.71 643.57 C 461.43 646.43 463.57 649.29 466.43 651.43 C 469.29 653.57 472.14 654.29 475.71 655 C 479.29 655.71 485.71 655.71 494.29 655.71 C 549.91 655.71 596.36 655.71 635.07 656.43 C 673.78 657.14 712.49 658.57 735.71 660.71 C 737.86 662.86 739.29 665.71 739.29 670 L 750.71 670 C 750.71 665.71 752.14 662.86 754.29 660.71 C 777.51 658.57 816.22 657.14 854.93 656.43 C 893.64 655.71 940.09 655.71 995.71 655.71 C 1004.29 655.71 1010.71 655.71 1014.29 655 C 1017.86 654.29 1020.71 653.57 1023.57 651.43 C 1026.43 649.29 1028.57 646.43 1029.29 643.57 C 1030 640.71 1030 637.86 1030 633.57 L 1030 630 L 1023.79 630 L 1023.79 632.86 C 1023.79 639.54 1022.62 643.36 1020.29 645.27 C 1016.8 648.13 1015.64 649.09 1012.14 649.09 L 994.29 649.09 C 878.16 649.09 800.74 650.51 754.29 652.66 C 750 654.8 747.14 659.09 745 663.37 C 742.86 659.09 740 654.8 735.71 652.66 C 689.26 650.51 611.84 649.09 495.71 649.09 L 477.86 649.09 C 474.36 649.09 473.2 648.13 469.71 645.27 C 467.38 643.36 466.21 639.54 466.21 632.86 L 466.21 630 Z"/>
+    <rect class="overlapCard" x="575" y="683" width="340" height="68" rx="8"/><text class="heading" x="745" y="709" text-anchor="middle">Legally relevant overlap · court calculation</text><text class="source" x="745" y="733" text-anchor="middle">(Placeholder Judgment [24])</text>
+  </g>
+
+  <text class="subtitle" x="90" y="770">Illustrative only · Dates and authorities are fictional placeholders · Editable SVG text and brace paths</text>
+</svg>
